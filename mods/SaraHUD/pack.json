@@ -1,0 +1,7 @@
+{
+	"name": "SaraHUD",
+	"description": "by Novikond <3\nChange preferences IN GAME (well, not yet)",
+	"restart":false,
+	"runsGlobally": true,
+	"color": [255, 126, 192]
+}

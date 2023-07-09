@@ -1,7 +1,7 @@
 --[[
 	SaraHUD:R ver.[0.1.3]
 	by Novikond
---]]
+]]
 
 -- settings:
 local pref = {
@@ -44,31 +44,28 @@ function getScriptDirectory()
   return scriptPath:match("(.*/)") or ""
 end
 
-function onCreate()
-	saraTools = require(getScriptDirectory()..'saraTools')
-end
+function onCreate() saraTools = require(getScriptDirectory() .. 'saraTools') end
 
 function onCreatePost()
-	for i = 1, #hudStuff do setProperty(hudStuff[i]..'.visible', false) end
+	for i = 1, #hudStuff do setProperty(hudStuff[i] .. '.visible', false) end
 	
 	if pref.statsType == 'sarahud' then
 		if pref.statsBg then
 			draw.sprite('leftRounded', 'roundedSHUD', 52, downscroll and 9 or screenHeight - 118, 'hud', 18, 110)
-			draw.graphic('centerBox', getProperty('leftRounded.x')+18, getProperty('leftRounded.y'), 1, 110)
-			draw.sprite('rightRounded', 'roundedSHUD', getProperty('centerBox.x')+getProperty('centerBox.width'), getProperty('centerBox.y'), 'hud', 18, 110)
+			draw.graphic('centerBox', getProperty('leftRounded.x') + 18, getProperty('leftRounded.y'), 1, 110)
+			draw.sprite('rightRounded', 'roundedSHUD', getProperty('centerBox.x') + getProperty('centerBox.width'), getProperty('centerBox.y'), 'hud', 18, 110)
 			setProperty('rightRounded.flipX', true)
-			for i = 1, 3 do setProperty(statsbgthings[i]..'.alpha', 0.2) end
+			for i = 1, 3 do setProperty(statsbgthings[i] .. '.alpha', 0.2) end
 		end
 	
-		draw.sprite('ratingIcon', shud..'ratingIcon', 15, downscroll and 14 or screenHeight - 45, 'hud', 32)
-		draw.sprite('scoreIcon', shud..'scoreIcon', 15, downscroll and getProperty('ratingIcon.y')+34 or getProperty('ratingIcon.y')-34, 'hud', 32)
-		draw.sprite('missesIcon', shud..'missesIcon', 15, downscroll and getProperty('scoreIcon.y')+34 or getProperty('scoreIcon.y')-34, 'hud', 32)
+		draw.sprite('ratingIcon', shud .. 'ratingIcon', 15, downscroll and 14 or screenHeight - 45, 'hud', 32)
+		draw.sprite('scoreIcon', shud .. 'scoreIcon', 15, downscroll and getProperty('ratingIcon.y') + 34 or getProperty('ratingIcon.y') - 34, 'hud', 32)
+		draw.sprite('missesIcon', shud .. 'missesIcon', 15, downscroll and getProperty('scoreIcon.y') + 34 or getProperty('scoreIcon.y') - 34, 'hud', 32)
 		
-		draw.text('ratingText', '?', 0, not pref.statsBg and getProperty('ratingIcon.x')+37 or getProperty('ratingIcon.x')+44, getProperty('ratingIcon.y')+6, unpack(DEFsarahud))
-		draw.text('scoreText', '0', 0, not pref.statsBg and getProperty('scoreIcon.x')+37 or getProperty('scoreIcon.x')+44, getProperty('scoreIcon.y')+6, unpack(DEFsarahud))
-		draw.text('missesText', '0', 0, not pref.statsBg and getProperty('missesIcon.x')+37 or getProperty('missesIcon.x')+44, getProperty('missesIcon.y')+6, unpack(DEFsarahud))
-	end
-	if pref.statsType == 'vanilla' then
+		draw.text('ratingText', '?', 0, not pref.statsBg and getProperty('ratingIcon.x') + 37 or getProperty('ratingIcon.x') + 44, getProperty('ratingIcon.y') + 6, unpack(DEFsarahud))
+		draw.text('scoreText', '0', 0, not pref.statsBg and getProperty('scoreIcon.x') + 37 or getProperty('scoreIcon.x') + 44, getProperty('scoreIcon.y') + 6, unpack(DEFsarahud))
+		draw.text('missesText', '0', 0, not pref.statsBg and getProperty('missesIcon.x') + 37 or getProperty('missesIcon.x') + 44, getProperty('missesIcon.y') + 6, unpack(DEFsarahud))
+	elseif pref.statsType == 'vanilla' then 
 		-- i'm too lazy man
 	end
 	
@@ -80,33 +77,36 @@ function onCreatePost()
 	
 	if pref.elementsAlpha < 1 then
 		for i = 1, 3 do
-			setProperty(textStuff[i]..'.alpha', pref.elementsAlpha)
-			setProperty(iconStuff[i]..'.alpha', pref.elementsAlpha)
+			setProperty(textStuff[i] .. '.alpha', pref.elementsAlpha)
+			setProperty(iconStuff[i] .. '.alpha', pref.elementsAlpha)
 			if pref.elementsAlpha <= .7 and pref.statsBg then 
-				setProperty(statsbgthings[i]..'.alpha', 0.1)
+				setProperty(statsbgthings[i] .. '.alpha', 0.1)
 			end
 		end
 	end
 end
 
-function onUpdateScore()
-	setTextString('ratingText', string.format("%.2f%%", rating * 100)..' ['..getProperty('ratingFC')..']')
+function goodNoteHit() updateHud() end
+function noteMiss() updateHud() end
+
+function updateHud()
+	setTextString('ratingText', string.format("%.2f%%", rating * 100) .. ' [' .. getProperty('ratingFC') .. ']')
 	setTextString('scoreText', score)
 	setTextString('missesText', misses)
 
 	if pref.statsBg then
 		statsWidth = getProperty('ratingText.width') - 18
 		setGraphicSize('centerBox', statsWidth, 110)
-		setProperty('rightRounded.x', getProperty('centerBox.x')+getProperty('centerBox.width'))
+		setProperty('rightRounded.x', getProperty('centerBox.x') + getProperty('centerBox.width'))
 	end
 end
 
 function onGameOverStart()
 	if pref.deathScreen then
 		local deaths = getPropertyFromClass('PlayState', 'deathCounter')
-		local deathScreenText = '< Misses: '..misses..' | Score: '..score..' | Rating: '..string.format("%.2f%%", rating * 100)..' > • < Blueballed: '..deaths..' >'
-		draw.sprite('bbIcon', shud..'bbIcon', 15, screenHeight - 45, 'hud', 32)
-		draw.text('bbText', deathScreenText, 0, getProperty('bbIcon.x')+38, getProperty('bbIcon.y')+6, unpack(DEFsarahud))
+		local deathScreenText = '< Misses: ' .. misses .. ' | Score: ' .. score .. ' | Rating: ' .. string.format("%.2f%%", rating * 100) .. ' > • < Blueballed: ' .. deaths .. ' >'
+		draw.sprite('bbIcon', shud .. 'bbIcon', 15, screenHeight - 45, 'hud', 32)
+		draw.text('bbText', deathScreenText, 0, getProperty('bbIcon.x') + 38, getProperty('bbIcon.y') + 6, unpack(DEFsarahud))
 	end
 end
 

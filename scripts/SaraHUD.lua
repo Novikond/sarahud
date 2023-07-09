@@ -86,7 +86,7 @@ function onCreatePost()
 	end
 end
 
-function goodNoteHit() updateHud() end
+function goodNoteHit(n, d, t, sus) if not sus then updateHud() end end
 function noteMiss() updateHud() end
 
 function updateHud()

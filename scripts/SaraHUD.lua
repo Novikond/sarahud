@@ -86,7 +86,10 @@ function onCreatePost()
 	end
 end
 
-function onUpdateScore()
+function goodNoteHit() updateHud() end
+function noteMiss() updateHud() end
+
+function updateHud()
 	setTextString('ratingText', string.format("%.2f%%", rating * 100) .. ' [' .. getProperty('ratingFC') .. ']')
 	setTextString('scoreText', score)
 	setTextString('missesText', misses)

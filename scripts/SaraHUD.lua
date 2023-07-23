@@ -49,6 +49,8 @@ function onCreate() saraTools = require(getScriptDirectory() .. 'saraTools') end
 function onCreatePost()
 	for i = 1, #hudStuff do setProperty(hudStuff[i] .. '.visible', false) end
 	
+	--draw.text('test', '[••••••••••]   [••••••••••]   [••••••••••]   [••••••••••]   [••••••••••]', 0, 10, 10, unpack(DEFsarahud))
+	
 	if pref.statsType == 'sarahud' then
 		if pref.statsBg then
 			draw.sprite('leftRounded', 'roundedSHUD', 52, downscroll and 9 or screenHeight - 118, 'hud', 18, 110)
@@ -90,7 +92,7 @@ function goodNoteHit(n, d, t, sus) if not sus then updateHud() end end
 function noteMiss() updateHud() end
 
 function updateHud()
-	setTextString('ratingText', string.format("%.2f%%", rating * 100) .. ' [' .. getProperty('ratingFC') .. ']')
+	setTextString('ratingText', util.floorDecimal(rating * 100, 2) .. '% [' .. getProperty('ratingFC') .. ']')
 	setTextString('scoreText', score)
 	setTextString('missesText', misses)
 

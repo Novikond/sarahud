@@ -5,6 +5,7 @@
 
 draw = {}
 effect = {}
+util = {}
 
 draw.text = function(tag, text, width, x, y, alignment, camera, size, color, borderSize, borderColor, antial, font)
 	makeLuaText(tag, text, width, x, y)
@@ -55,16 +56,26 @@ effect.shift = function(tag, moveX, moveY, isAllowed, speed, ease)
 	doTweenY(tag .. '-effect-shift-y', tag, og.y, (speed or 0.2) / playbackRate, ease or 'linear')
 end
 
-function switch(case_table)
+util.switch = function(case_table)
    return function(case_val)
       	local case_fn = case_table[case_val] or case_table.def
       	if case_fn then return case_fn() end
    	end
 end
 
-function formatTime(millisecond)
+util.formatTime = function(millisecond)
     local seconds = math.floor(millisecond / 1000)
-    return string.format("%01d:%02d", (seconds / 60) % 60, seconds % 60)  
+    return string.format("%01d:%02d", (seconds / 60) % 60, seconds % 60) 
 end
 
-return draw, effect
+util.floorDecimal = function(value, decimals) -- port of `CoolUtil.floorDecimal` to lua
+    if decimals < 1 then return math.floor(value) end
+
+    local tempMult = 1
+    for i = 1, decimals do tempMult = tempMult * 10 end
+
+    local newValue = math.floor(value * tempMult)
+    return newValue / tempMult
+end
+
+return draw, effect, util

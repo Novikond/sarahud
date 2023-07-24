@@ -36,24 +36,23 @@ draw.graphic = function(tag, x, y, width, height, color, camera)
 	addLuaSprite(tag, true)
 end
 
-effect.blink = function(tag, color, speed, ease)
+effect.blink = function(tag, color, speed, easeType)
 	setProperty(tag .. '.color', getColorFromHex(color))
-	doTweenColor(tag .. '-effect-blink', tag, 'ffffff', (speed or 0.2) / playbackRate, ease or 'linear')
+	doTweenColor(tag .. '-effect-blink', tag, 'ffffff', (speed or 0.2) / playbackRate, easeType or 'linear') -- not using startTween() here cuz buggy
 end
 
-effect.bop = function(tag, scaleX, scaleY, speed, ease)
+effect.bop = function(tag, scaleX, scaleY, speed, easeType)
 	setProperty(tag .. '.scale.x', scaleX)
     setProperty(tag .. '.scale.y', scaleY)
-    doTweenX(tag .. '-effect-bop-x', tag .. '.scale', 1, (speed or 0.2) / playbackRate, ease or 'linear')
-    doTweenY(tag .. '-effect-bop-y', tag .. '.scale', 1, (speed or 0.2) / playbackRate, ease or 'linear')
+	startTween(tag .. '-effect-bop-x', tag .. '.scale', {x = 1}, (speed or 0.2) / playbackRate, {ease = easeType or 'linear'})
+	startTween(tag .. '-effect-bop-y', tag .. '.scale', {y = 1}, (speed or 0.2) / playbackRate, {ease = easeType or 'linear'})
 end
 
-effect.shift = function(tag, moveX, moveY, isAllowed, speed, ease)
-	if isAllowed then og = {x = getProperty(tag..'.x'), y = getProperty(tag..'.y')} end
-	setProperty(tag .. '.x', og.x + moveX)
-	setProperty(tag .. '.y', og.y + moveY)
-	doTweenX(tag .. '-effect-shift-x', tag, og.x, (speed or 0.2) / playbackRate, ease or 'linear')
-	doTweenY(tag .. '-effect-shift-y', tag, og.y, (speed or 0.2) / playbackRate, ease or 'linear')
+effect.shift = function(tag, ogX, ogY, moveX, moveY, speed, easeType)
+	setProperty(tag .. '.x', ogX + moveX)
+	setProperty(tag .. '.y', ogY + moveY)
+	startTween(tag .. '-effect-shift-x', tag, {x = ogX}, (speed or 0.2) / playbackRate, {ease = easeType or 'linear'})
+	startTween(tag .. '-effect-shift-y', tag, {y = ogY}, (speed or 0.2) / playbackRate, {ease = easeType or 'linear'})
 end
 
 util.switch = function(case_table)
@@ -76,6 +75,12 @@ util.floorDecimal = function(value, decimals) -- port of `CoolUtil.floorDecimal`
 
     local newValue = math.floor(value * tempMult)
     return newValue / tempMult
+end
+
+util.traceHealthBar = function(obj, direction, offset)
+	local hp = getProperty('healthBar.percent') * (getProperty('healthBar.width') / 100)
+	local the = (getProperty('healthBar.' .. direction) + getProperty('healthBar.width') - hp)
+	setProperty(obj .. '.' .. direction, the - offset)
 end
 
 return draw, effect, util

@@ -15,14 +15,15 @@ local pref = {
 	modifiersIcons = false, -- wip
 	verticalHealthBar = false,
 	
-	laneUnderlay = 0, -- wip
+	laneUnderlay = .5,
+	oppUnderlay = true,
 	elementsAlpha = 1
 }
 
 local textColors = {
-	['ratingText'] = 'f6b7bd',
-	['scoreText'] = 'b1d9f0',
-	['missesText'] = 'e3b7ee'
+	{'ratingText', 'f6b7bd'},
+	{'scoreText', 'b1d9f0'},
+	{'missesText', 'e3b7ee'}
 }
 -- no more settings :pensive:
 
@@ -37,9 +38,9 @@ local statsbgthings = {'leftRounded', 'centerBox', 'rightRounded'}
 local DEFsarahud = {'left', 'hud', 16, 'ffffff', 1, '000000', true, 'PhantomMuff.ttf'}
 
 function getScriptDirectory()
-  local info = debug.getinfo(1, "S")
-  local scriptPath = info.source:sub(2)
-  return scriptPath:match("(.*/)") or ""
+	local info = debug.getinfo(1, "S")
+	local scriptPath = info.source:sub(2)
+	return scriptPath:match("(.*/)") or ""
 end
 
 function onCreate() saraTools = require(getScriptDirectory() .. 'saraTools') end
@@ -90,9 +91,9 @@ function onCreatePost()
 	end
 	
 	if pref.coloredText then
-		setTextColor('ratingText', textColors['ratingText'])
-		setTextColor('scoreText', textColors['scoreText'])
-		setTextColor('missesText', textColors['missesText'])
+		for i = 1, #textColors do
+			setTextColor(textColors[i][1], textColors[i][2])
+		end
 	end
 	
 	if pref.verticalHealthBar then
@@ -100,6 +101,20 @@ function onCreatePost()
 		screenCenter('healthBar', 'y')
 		setProperty('healthBar.x', screenWidth - 355)
 		setProperty('iconP2.flipX', true)
+	end
+
+	if pref.laneUnderlay > 0 then
+		for i = 0, 3 do
+			draw.graphic('bfUnderlay' .. i, getPropertyFromGroup('playerStrums', i, 'x'), 0, 110, screenHeight)
+			setProperty('bfUnderlay' .. i .. '.alpha', pref.laneUnderlay)
+			setObjectOrder('bfUnderlay' .. i, getObjectOrder('strumLineNotes') - 1)
+
+			if pref.oppUnderlay then
+				draw.graphic('dadUnderlay' .. i, getPropertyFromGroup('opponentStrums', i, 'x'), 0, 110, screenHeight)
+				setProperty('dadUnderlay' .. i .. '.alpha', pref.laneUnderlay)
+				setObjectOrder('dadUnderlay' .. i, getObjectOrder('strumLineNotes') - 1)
+			end
+		end
 	end
 	
 	if pref.elementsAlpha < 1 then
@@ -119,6 +134,13 @@ function onUpdatePost()
 		setProperty('iconP2.x', getProperty('healthBar.x') + 225)
 		util.traceHealthBar('iconP1', 'y', 310)
 		util.traceHealthBar('iconP2', 'y', 430)
+	end
+
+	if pref.laneUnderlay > 0 then
+		for i = 0, 3 do
+			setProperty('bfUnderlay' .. i .. '.x', getPropertyFromGroup('playerStrums', i, 'x'))
+			if pref.oppUnderlay then setProperty('dadUnderlay' .. i .. '.x', getPropertyFromGroup('opponentStrums', i, 'x')) end
+		end
 	end
 end
 

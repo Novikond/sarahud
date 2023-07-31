@@ -15,7 +15,7 @@ local pref = {
 	modifiersIcons = false, -- wip
 	verticalHealthBar = false,
 	
-	laneUnderlay = .5,
+	laneUnderlay = 0,
 	oppUnderlay = true,
 	elementsAlpha = 1
 }

@@ -31,7 +31,7 @@ local saraTools
 local shud = 'saraHUD/'..pref.skin..'/'
 local statsWidth = 20
 
-local hudStuff = {'scoreTxt', --[['timeBar', 'timeBarBG', 'timeTxt']]}
+local hudStuff = {'scoreTxt', 'timeTxt'}
 local textStuff = {'ratingText', 'scoreText', 'missesText'}
 local iconStuff = {'ratingIcon', 'scoreIcon', 'missesIcon'}
 local statsbgthings = {'leftRounded', 'centerBox', 'rightRounded'}
@@ -50,50 +50,61 @@ function onCreatePost()
 	
 	--draw.sprite('test', shud .. 'pracIcon', 0, 0, 'hud'); screenCenter('test')
 	
-	if pref.statsType == 'sarahud' then
-		if pref.statsBg then
-			draw.sprite('leftRounded', 'roundedSHUD', 52, downscroll and 9 or screenHeight - 118, 'hud', 18, 110)
-			draw.graphic('centerBox', getProperty('leftRounded.x') + 18, getProperty('leftRounded.y'), 1, 110)
-			draw.sprite('rightRounded', 'roundedSHUD', getProperty('centerBox.x') + getProperty('centerBox.width'), getProperty('centerBox.y'), 'hud', 18, 110)
-			setProperty('rightRounded.flipX', true)
-			setProperty('leftRounded.antialiasing', false)
-			setProperty('rightRounded.antialiasing', false)
-			for i = 1, 3 do setProperty(statsbgthings[i] .. '.alpha', 0.2) end
-		end
+	if not hideHud then
+		if pref.statsType == 'sarahud' then
+			if pref.statsBg then
+				draw.sprite('leftRounded', 'roundedSHUD', 52, downscroll and 9 or screenHeight - 118, 'hud', 18, 110)
+				draw.graphic('centerBox', getProperty('leftRounded.x') + 18, getProperty('leftRounded.y'), 1, 110)
+				draw.sprite('rightRounded', 'roundedSHUD', getProperty('centerBox.x') + getProperty('centerBox.width'), getProperty('centerBox.y'), 'hud', 18, 110)
+				setProperty('rightRounded.flipX', true)
+				setProperty('leftRounded.antialiasing', false)
+				setProperty('rightRounded.antialiasing', false)
+				for i = 1, 3 do setProperty(statsbgthings[i] .. '.alpha', 0.2) end
+			end
 	
-		draw.sprite('ratingIcon', shud .. 'ratingIcon', 15, downscroll and 14 or screenHeight - 45, 'hud', 32)
-		draw.sprite('scoreIcon', shud .. 'scoreIcon', 15, downscroll and getProperty('ratingIcon.y') + 34 or getProperty('ratingIcon.y') - 34, 'hud', 32)
-		draw.sprite('missesIcon', shud .. 'missesIcon', 15, downscroll and getProperty('scoreIcon.y') + 34 or getProperty('scoreIcon.y') - 34, 'hud', 32)
+			draw.sprite('ratingIcon', shud .. 'ratingIcon', 15, downscroll and 14 or screenHeight - 45, 'hud', 32)
+			draw.sprite('scoreIcon', shud .. 'scoreIcon', 15, downscroll and getProperty('ratingIcon.y') + 34 or getProperty('ratingIcon.y') - 34, 'hud', 32)
+			draw.sprite('missesIcon', shud .. 'missesIcon', 15, downscroll and getProperty('scoreIcon.y') + 34 or getProperty('scoreIcon.y') - 34, 'hud', 32)
 		
-		draw.text('ratingText', '?', 0, not pref.statsBg and getProperty('ratingIcon.x') + 37 or getProperty('ratingIcon.x') + 44, getProperty('ratingIcon.y') + 6, unpack(DEFsarahud))
-		draw.text('scoreText', '0', 0, not pref.statsBg and getProperty('scoreIcon.x') + 37 or getProperty('scoreIcon.x') + 44, getProperty('scoreIcon.y') + 6, unpack(DEFsarahud))
-		draw.text('missesText', '0', 0, not pref.statsBg and getProperty('missesIcon.x') + 37 or getProperty('missesIcon.x') + 44, getProperty('missesIcon.y') + 6, unpack(DEFsarahud))
+			draw.text('ratingText', '?', 0, not pref.statsBg and getProperty('ratingIcon.x') + 37 or getProperty('ratingIcon.x') + 44, getProperty('ratingIcon.y') + 6, unpack(DEFsarahud))
+			draw.text('scoreText', '0', 0, not pref.statsBg and getProperty('scoreIcon.x') + 37 or getProperty('scoreIcon.x') + 44, getProperty('scoreIcon.y') + 6, unpack(DEFsarahud))
+			draw.text('missesText', '0', 0, not pref.statsBg and getProperty('missesIcon.x') + 37 or getProperty('missesIcon.x') + 44, getProperty('missesIcon.y') + 6, unpack(DEFsarahud))
 	
-	elseif pref.statsType == 'vanilla' then 
-		if pref.statsBg then
-			draw.graphic('centerBox', 0, downscroll and 10 or screenHeight - 50, 590, 40)
-			screenCenter('centerBox', 'x')
-			draw.sprite('leftRounded', 'roundedVanilla', getProperty('centerBox.x') - 10, getProperty('centerBox.y'), 'hud')
-			draw.sprite('rightRounded', 'roundedVanilla', getProperty('centerBox.x') + getProperty('centerBox.width'), getProperty('centerBox.y'), 'hud')
-			setProperty('rightRounded.flipX', true)
-			setProperty('leftRounded.antialiasing', false)
-			setProperty('rightRounded.antialiasing', false)
-			for i = 1, 3 do setProperty(statsbgthings[i] .. '.alpha', 0.2) end
+		elseif pref.statsType == 'vanilla' then 
+			if pref.statsBg then
+				draw.graphic('centerBox', 0, downscroll and 10 or screenHeight - 50, 590, 40)
+				screenCenter('centerBox', 'x')
+				draw.sprite('leftRounded', 'roundedVanilla', getProperty('centerBox.x') - 10, getProperty('centerBox.y'), 'hud')
+				draw.sprite('rightRounded', 'roundedVanilla', getProperty('centerBox.x') + getProperty('centerBox.width'), getProperty('centerBox.y'), 'hud')
+				setProperty('rightRounded.flipX', true)
+				setProperty('leftRounded.antialiasing', false)
+				setProperty('rightRounded.antialiasing', false)
+				for i = 1, 3 do setProperty(statsbgthings[i] .. '.alpha', 0.2) end
+			end
+		
+			draw.sprite('ratingIcon', shud .. 'ratingIcon', (screenWidth / 2) - 295, downscroll and 14 or screenHeight - 45, 'hud', 32)
+			draw.sprite('scoreIcon', shud .. 'scoreIcon', getProperty('ratingIcon.x') + 230, downscroll and 14 or screenHeight - 45, 'hud', 32)
+			draw.sprite('missesIcon', shud .. 'missesIcon', getProperty('scoreIcon.x') + 230, downscroll and 14 or screenHeight - 45, 'hud', 32)
+		
+			draw.text('ratingText', '?', 0, getProperty('ratingIcon.x') + 36, getProperty('ratingIcon.y') + 6, unpack(DEFsarahud))
+			draw.text('scoreText', '0', 0, getProperty('scoreIcon.x') + 36, getProperty('scoreIcon.y') + 6, unpack(DEFsarahud))
+			draw.text('missesText', '0', 0, getProperty('missesIcon.x') + 36, getProperty('missesIcon.y') + 6, unpack(DEFsarahud))
 		end
-		
-		draw.sprite('ratingIcon', shud .. 'ratingIcon', (screenWidth / 2) - 295, downscroll and 14 or screenHeight - 45, 'hud', 32)
-		draw.sprite('scoreIcon', shud .. 'scoreIcon', getProperty('ratingIcon.x') + 230, downscroll and 14 or screenHeight - 45, 'hud', 32)
-		draw.sprite('missesIcon', shud .. 'missesIcon', getProperty('scoreIcon.x') + 230, downscroll and 14 or screenHeight - 45, 'hud', 32)
-		
-		draw.text('ratingText', '?', 0, getProperty('ratingIcon.x') + 36, getProperty('ratingIcon.y') + 6, unpack(DEFsarahud))
-		draw.text('scoreText', '0', 0, getProperty('scoreIcon.x') + 36, getProperty('scoreIcon.y') + 6, unpack(DEFsarahud))
-		draw.text('missesText', '0', 0, getProperty('missesIcon.x') + 36, getProperty('missesIcon.y') + 6, unpack(DEFsarahud))
 	end
 	
 	if pref.coloredText then
 		for i = 1, #textColors do
 			setTextColor(textColors[i][1], textColors[i][2])
 		end
+	end
+
+	if timeBarType ~= 'Disabled' then
+		draw.text('songText', songName, 400, 0, getProperty('timeBar.y'), 'center', 'hud', 16, nil, 1, nil, true, 'PhantomMuff.ttf')
+		draw.text('timeText', util.formatTime(songLength), 400, getProperty('timeBar.x') - 1, getProperty('timeBar.y'), 'right', 'hud', 16, nil, 1, nil, true, 'PhantomMuff.ttf')
+		screenCenter('songText', 'x')
+
+		draw.sprite('songIcon', shud .. 'songIcon', getProperty('timeBar.x') - 30, getProperty('timeBar.y') - 2, 'hud', 26)
+		draw.sprite('timeIcon', shud .. 'timerIcon', getProperty('timeBar.x') + getProperty('timeBar.width') + 5, getProperty('timeBar.y') - 2, 'hud', 26)
 	end
 	
 	if pref.verticalHealthBar then
@@ -129,6 +140,19 @@ function onCreatePost()
 end
 
 function onUpdatePost()
+	if timeBarType ~= 'Disabled' then
+		setProperty('songText.y', getProperty('timeBar.y'))
+		setProperty('timeText.y', getProperty('timeBar.y'))
+
+		setProperty('songIcon.y', getProperty('timeBar.y') - 2)
+		setProperty('timeIcon.y', getProperty('timeBar.y') - 2)
+
+		setProperty('songText.alpha', getProperty('timeBar.alpha'))
+		setProperty('timeText.alpha', getProperty('timeBar.alpha'))
+		setProperty('songIcon.alpha', getProperty('timeBar.alpha'))
+		setProperty('timeIcon.alpha', getProperty('timeBar.alpha'))
+	end
+
 	if pref.verticalHealthBar then
 		setProperty('iconP1.x', getProperty('healthBar.x') + 225)
 		setProperty('iconP2.x', getProperty('healthBar.x') + 225)

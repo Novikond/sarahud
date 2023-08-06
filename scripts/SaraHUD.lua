@@ -12,7 +12,6 @@ local pref = {
 	extraStats = false, -- wip
 	
 	coloredText = true,
-	modifiersIcons = false, -- wip
 	verticalHealthBar = false,
 	
 	laneUnderlay = 0,
@@ -72,7 +71,7 @@ function onCreatePost()
 	
 		elseif pref.statsType == 'vanilla' then 
 			if pref.statsBg then
-				draw.graphic('centerBox', 0, downscroll and 10 or screenHeight - 50, 590, 40)
+				draw.graphic('centerBox', 0, downscroll and 25 or screenHeight - 50, 590, 40)
 				screenCenter('centerBox', 'x')
 				draw.sprite('leftRounded', 'roundedVanilla', getProperty('centerBox.x') - 10, getProperty('centerBox.y'), 'hud')
 				draw.sprite('rightRounded', 'roundedVanilla', getProperty('centerBox.x') + getProperty('centerBox.width'), getProperty('centerBox.y'), 'hud')
@@ -82,9 +81,9 @@ function onCreatePost()
 				for i = 1, 3 do setProperty(statsbgthings[i] .. '.alpha', 0.2) end
 			end
 		
-			draw.sprite('ratingIcon', shud .. 'ratingIcon', (screenWidth / 2) - 295, downscroll and 14 or screenHeight - 45, 'hud', 32)
-			draw.sprite('scoreIcon', shud .. 'scoreIcon', getProperty('ratingIcon.x') + 230, downscroll and 14 or screenHeight - 45, 'hud', 32)
-			draw.sprite('missesIcon', shud .. 'missesIcon', getProperty('scoreIcon.x') + 230, downscroll and 14 or screenHeight - 45, 'hud', 32)
+			draw.sprite('ratingIcon', shud .. 'ratingIcon', (screenWidth / 2) - 295, downscroll and 30 or screenHeight - 45, 'hud', 32)
+			draw.sprite('scoreIcon', shud .. 'scoreIcon', getProperty('ratingIcon.x') + 230, downscroll and 30 or screenHeight - 45, 'hud', 32)
+			draw.sprite('missesIcon', shud .. 'missesIcon', getProperty('scoreIcon.x') + 230, downscroll and 30 or screenHeight - 45, 'hud', 32)
 		
 			draw.text('ratingText', '?', 0, getProperty('ratingIcon.x') + 36, getProperty('ratingIcon.y') + 6, unpack(DEFsarahud))
 			draw.text('scoreText', '0', 0, getProperty('scoreIcon.x') + 36, getProperty('scoreIcon.y') + 6, unpack(DEFsarahud))

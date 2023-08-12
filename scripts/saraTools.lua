@@ -41,6 +41,11 @@ effect.blink = function(tag, color, speed, easeType)
 	doTweenColor(tag .. '-effect-blink', tag, 'ffffff', (speed or 0.2) / playbackRate, easeType or 'linear') -- not using startTween() here cuz buggy
 end
 
+effect.alpha = function(tag, alphaFrom, alphaTo, speed, easeType)
+	setProperty(tag .. '.alpha', alphaFrom)
+	startTween(tag .. '-effect-alpha', tag, {alpha = alphaTo}, (speed or 0.2) / playbackRate, {ease = easeType or 'linear'})
+end
+
 effect.bop = function(tag, scaleX, scaleY, speed, easeType)
 	setProperty(tag .. '.scale.x', scaleX)
     setProperty(tag .. '.scale.y', scaleY)

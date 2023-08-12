@@ -8,21 +8,24 @@ local pref = {
 	statsType = 'vanilla', -- Available: 'sarahud', 'vanilla'
 	skin = 'copacetic',
 	
+	extraStats = 'default', -- Available: false, 'default' || Will be available: 'expanded', 'debug'
+
 	statsBg = true,
-	extraStats = false, -- wip
-	
 	coloredText = true,
-	verticalHealthBar = false,
 	
 	laneUnderlay = 0,
 	oppUnderlay = true,
-	elementsAlpha = 1
 }
 
 local textColors = {
 	{'ratingText', 'f6b7bd'},
 	{'scoreText', 'b1d9f0'},
-	{'missesText', 'e3b7ee'}
+	{'missesText', 'e3b7ee'},
+	
+	{'sickText', 'ccffbf'},
+	{'goodText', 'fcffba'},
+	{'badText', 'ffd2bb'},
+	{'noText', 'ffbfcc'}
 }
 -- no more settings :pensive:
 
@@ -34,7 +37,14 @@ local hudStuff = {'scoreTxt', 'timeTxt'}
 local textStuff = {'ratingText', 'scoreText', 'missesText'}
 local iconStuff = {'ratingIcon', 'scoreIcon', 'missesIcon'}
 local statsbgthings = {'leftRounded', 'centerBox', 'rightRounded'}
+local extrDef = {'sickIcon', 'goodIcon', 'badIcon', 'noIcon'}
 local DEFsarahud = {'left', 'hud', 16, 'ffffff', 1, '000000', true, 'PhantomMuff.ttf'}
+
+local newId
+local sicks = 0
+local goods = 0
+local bads = 0
+local shits = 0
 
 function getScriptDirectory()
 	local info = debug.getinfo(1, "S")
@@ -89,6 +99,19 @@ function onCreatePost()
 			draw.text('scoreText', '0', 0, getProperty('scoreIcon.x') + 36, getProperty('scoreIcon.y') + 6, unpack(DEFsarahud))
 			draw.text('missesText', '0', 0, getProperty('missesIcon.x') + 36, getProperty('missesIcon.y') + 6, unpack(DEFsarahud))
 		end
+
+		if pref.extraStats == 'default' then
+			draw.sprite('sickIcon', shud .. 'sickIcon', screenWidth - 56, (screenHeight / 2) - 48, 'hud', 42)
+			draw.sprite('goodIcon', shud .. 'goodIcon', getProperty('sickIcon.x'), getProperty('sickIcon.y') + 46, 'hud', 42)
+			draw.sprite('badIcon', shud .. 'badIcon', getProperty('sickIcon.x'), getProperty('goodIcon.y') + 46, 'hud', 42)
+			draw.sprite('noIcon', shud .. 'noIcon', getProperty('sickIcon.x'), getProperty('badIcon.y') + 46, 'hud', 42)
+			for i = 1, #extrDef do setProperty(extrDef[i] .. '.alpha', 0.5) end
+
+			draw.text('sickText', '0', 100, getProperty('sickIcon.x') - 29, getProperty('sickIcon.y') + 11, 'center', 'hud', 18, 'ffffff', 1, '000000', true, 'PhantomMuff.ttf')
+			draw.text('goodText', '0', 100, getProperty('goodIcon.x') - 29, getProperty('goodIcon.y') + 11, 'center', 'hud', 18, 'ffffff', 1, '000000', true, 'PhantomMuff.ttf')
+			draw.text('badText', '0', 100, getProperty('badIcon.x') - 29, getProperty('badIcon.y') + 11, 'center', 'hud', 18, 'ffffff', 1, '000000', true, 'PhantomMuff.ttf')
+			draw.text('noText', '0', 100, getProperty('noIcon.x') - 29, getProperty('noIcon.y') + 11, 'center', 'hud', 18, 'ffffff', 1, '000000', true, 'PhantomMuff.ttf')
+		end
 	end
 	
 	if pref.coloredText then
@@ -105,13 +128,6 @@ function onCreatePost()
 		draw.sprite('songIcon', shud .. 'songIcon', getProperty('timeBar.x') - 30, getProperty('timeBar.y') - 2, 'hud', 26)
 		draw.sprite('timeIcon', shud .. 'timerIcon', getProperty('timeBar.x') + getProperty('timeBar.width') + 5, getProperty('timeBar.y') - 2, 'hud', 26)
 	end
-	
-	if pref.verticalHealthBar then
-		setProperty('healthBar.angle', 90)
-		screenCenter('healthBar', 'y')
-		setProperty('healthBar.x', screenWidth - 355)
-		setProperty('iconP2.flipX', true)
-	end
 
 	if pref.laneUnderlay > 0 then
 		for i = 0, 3 do
@@ -123,16 +139,6 @@ function onCreatePost()
 				draw.graphic('dadUnderlay' .. i, getPropertyFromGroup('opponentStrums', i, 'x'), 0, 110, screenHeight)
 				setProperty('dadUnderlay' .. i .. '.alpha', pref.laneUnderlay)
 				setObjectOrder('dadUnderlay' .. i, getObjectOrder('strumLineNotes') - 1)
-			end
-		end
-	end
-	
-	if pref.elementsAlpha < 1 then
-		for i = 1, 3 do
-			setProperty(textStuff[i] .. '.alpha', pref.elementsAlpha)
-			setProperty(iconStuff[i] .. '.alpha', pref.elementsAlpha)
-			if pref.elementsAlpha <= .7 and pref.statsBg then 
-				setProperty(statsbgthings[i] .. '.alpha', 0.1)
 			end
 		end
 	end
@@ -152,13 +158,6 @@ function onUpdatePost()
 		setProperty('timeIcon.alpha', getProperty('timeBar.alpha'))
 	end
 
-	if pref.verticalHealthBar then
-		setProperty('iconP1.x', getProperty('healthBar.x') + 225)
-		setProperty('iconP2.x', getProperty('healthBar.x') + 225)
-		util.traceHealthBar('iconP1', 'y', 310)
-		util.traceHealthBar('iconP2', 'y', 430)
-	end
-
 	if pref.laneUnderlay > 0 then
 		for i = 0, 3 do
 			setProperty('bfUnderlay' .. i .. '.x', getPropertyFromGroup('playerStrums', i, 'x'))
@@ -167,7 +166,15 @@ function onUpdatePost()
 	end
 end
 
-function goodNoteHit(n, d, t, sus) if not sus then updateHud() end end
+function goodNoteHit(id, d, t, sus)
+	if not sus then
+		updateHud()
+		if pref.extraStats ~= false then 
+			newId = id -- no idea why getProperty('sicks') and stuff like that doesn't work anymore
+			updateHudExtra() 
+		end
+	end
+end
 function noteMiss() updateHud() end
 
 function updateHud()
@@ -179,5 +186,28 @@ function updateHud()
 		statsWidth = getProperty('ratingText.width') - 18
 		setGraphicSize('centerBox', statsWidth, 110)
 		setProperty('rightRounded.x', getProperty('centerBox.x') + getProperty('centerBox.width'))
+	end
+end
+
+function updateHudExtra()
+	if pref.extraStats == 'default' then
+		if getPropertyFromGroup('notes', newId, 'rating') == 'sick' then
+			sicks = sicks + 1
+			effect.alpha('sickIcon', 1, .5)
+		elseif getPropertyFromGroup('notes', newId, 'rating') == 'good' then
+			goods = goods + 1
+			effect.alpha('goodIcon', 1, .5)
+		elseif getPropertyFromGroup('notes', newId, 'rating') == 'bad' then
+			bads = bads + 1
+			effect.alpha('badIcon', 1, .5)
+		elseif getPropertyFromGroup('notes', newId, 'rating') == 'shit' then
+			shits = shits + 1
+			effect.alpha('noIcon', .9, .5)
+		end
+
+		setTextString('sickText', sicks)
+		setTextString('goodText', goods)
+		setTextString('badText', bads)
+		setTextString('noText', shits)
 	end
 end

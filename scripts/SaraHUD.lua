@@ -5,10 +5,10 @@
 
 -- settings:
 local pref = {
-	statsType = 'vanilla', -- Available: 'sarahud', 'vanilla'
+	statsType = 'sarahud', -- Available: 'sarahud', 'vanilla'
 	skin = 'copacetic',
 	
-	extraStats = 'default', -- Available: false, 'default' || Will be available: 'expanded', 'debug'
+	extraStats = false, -- Available: false, 'default' || Will be available: 'expanded', 'debug'
 
 	statsBg = true,
 	coloredText = true,

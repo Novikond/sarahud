@@ -8,13 +8,19 @@ local pref = {
 	statsType = 'sarahud', -- Available: 'sarahud', 'vanilla'
 	skin = 'copacetic',
 	
-	extraStats = false, -- Available: false, 'default' || Will be available: 'expanded', 'debug'
+	extraStats = false, -- Available: false, 'default' || Soon: 'expanded', 'debug'
 
 	statsBg = true,
 	coloredText = true,
 	
 	laneUnderlay = 0,
 	oppUnderlay = true,
+
+	optionsBind = false, -- Soon / Set it to false to access the menu from the pause menu (SaraMENU required)
+
+	-- Experimental:
+	healthBarOverlay = false, -- Soon
+	textRatings = true
 }
 
 local textColors = {
@@ -75,9 +81,9 @@ function onCreatePost()
 			draw.sprite('scoreIcon', shud .. 'scoreIcon', 15, downscroll and getProperty('ratingIcon.y') + 34 or getProperty('ratingIcon.y') - 34, 'hud', 32)
 			draw.sprite('missesIcon', shud .. 'missesIcon', 15, downscroll and getProperty('scoreIcon.y') + 34 or getProperty('scoreIcon.y') - 34, 'hud', 32)
 		
-			draw.text('ratingText', '?', 0, not pref.statsBg and getProperty('ratingIcon.x') + 37 or getProperty('ratingIcon.x') + 44, getProperty('ratingIcon.y') + 6, unpack(DEFsarahud))
-			draw.text('scoreText', '0', 0, not pref.statsBg and getProperty('scoreIcon.x') + 37 or getProperty('scoreIcon.x') + 44, getProperty('scoreIcon.y') + 6, unpack(DEFsarahud))
-			draw.text('missesText', '0', 0, not pref.statsBg and getProperty('missesIcon.x') + 37 or getProperty('missesIcon.x') + 44, getProperty('missesIcon.y') + 6, unpack(DEFsarahud))
+			draw.text('ratingText', '?', 0, not pref.statsBg and getProperty('ratingIcon.x') + 37 or getProperty('ratingIcon.x') + 49, getProperty('ratingIcon.y') + 6, unpack(DEFsarahud))
+			draw.text('scoreText', '0', 0, not pref.statsBg and getProperty('scoreIcon.x') + 37 or getProperty('scoreIcon.x') + 49, getProperty('scoreIcon.y') + 6, unpack(DEFsarahud))
+			draw.text('missesText', '0', 0, not pref.statsBg and getProperty('missesIcon.x') + 37 or getProperty('missesIcon.x') + 49, getProperty('missesIcon.y') + 6, unpack(DEFsarahud))
 	
 		elseif pref.statsType == 'vanilla' then 
 			if pref.statsBg then
@@ -129,6 +135,27 @@ function onCreatePost()
 		draw.sprite('timeIcon', shud .. 'timerIcon', getProperty('timeBar.x') + getProperty('timeBar.width') + 5, getProperty('timeBar.y') - 2, 'hud', 26)
 	end
 
+	if pref.textRatings then
+		setProperty('showRating', false)
+		setProperty('showComboNum', false)
+		setProperty('showCombo', false)
+
+		if pref.statsBg then
+			draw.graphic('centerBoxR', screenWidth / 2 + 140, downscroll and getProperty('healthBar.y') + 24 or getProperty('healthBar.y') - 43, 130, 40)
+			draw.sprite('leftRoundedR', 'roundedVanilla', getProperty('centerBoxR.x') - 10, getProperty('centerBoxR.y'), 'hud')
+			draw.sprite('rightRoundedR', 'roundedVanilla', getProperty('centerBoxR.x') + getProperty('centerBoxR.width'), getProperty('centerBoxR.y'), 'hud')
+			setProperty('rightRoundedR.flipX', true)
+			setProperty('leftRoundedR.antialiasing', false)
+			setProperty('rightRoundedR.antialiasing', false)
+			for i = 1, 3 do setProperty(statsbgthings[i] .. 'R.alpha', 0) end
+		end
+
+		draw.sprite('comboIcon', shud .. 'comboIcon', screenWidth / 2 + 140, downscroll and getProperty('healthBar.y') + 28 or getProperty('healthBar.y') - 38, 'hud', 32)
+		draw.text('textRatings', 'Sick [000]', 0, getProperty('comboIcon.x') + 36, getProperty('comboIcon.y') + 6, unpack(DEFsarahud))
+		setProperty('comboIcon.alpha', 0)
+		setProperty('textRatings.alpha', 0)
+	end
+
 	if pref.laneUnderlay > 0 then
 		for i = 0, 3 do
 			draw.graphic('bfUnderlay' .. i, getPropertyFromGroup('playerStrums', i, 'x'), 0, 110, screenHeight)
@@ -156,6 +183,11 @@ function onUpdatePost()
 		setProperty('timeText.alpha', getProperty('timeBar.alpha'))
 		setProperty('songIcon.alpha', getProperty('timeBar.alpha'))
 		setProperty('timeIcon.alpha', getProperty('timeBar.alpha'))
+
+		setProperty('songText.visible', getProperty('timeBar.visible'))
+		setProperty('timeText.visible', getProperty('timeBar.visible'))
+		setProperty('songIcon.visible', getProperty('timeBar.visible'))
+		setProperty('timeIcon.visible', getProperty('timeBar.visible'))
 	end
 
 	if pref.laneUnderlay > 0 then
@@ -169,9 +201,25 @@ end
 function goodNoteHit(id, d, t, sus)
 	if not sus then
 		updateHud()
+		newId = id -- no idea why getProperty('sicks') and stuff like that doesn't work in 0.7
+
 		if pref.extraStats ~= false then 
-			newId = id -- no idea why getProperty('sicks') and stuff like that doesn't work anymore
 			updateHudExtra() 
+		end
+
+		if pref.textRatings then
+			if pref.statsBg then
+				for i = 1, 3 do
+					setProperty(statsbgthings[i] .. 'R.alpha', .2)
+					startTween(statsbgthings[i] .. 'R-effect-alpha', statsbgthings[i] .. 'R', {alpha = 0}, 1, {ease = 'cubeInOut', startDelay = .9})
+				end
+			end
+			setTextString('textRatings', grabRating() .. ' [' .. canonevent(combo) .. ']')
+
+			setProperty('comboIcon.alpha', 1)
+			startTween('comboIcon-effect-alpha', 'comboIcon', {alpha = 0}, 1, {ease = 'cubeInOut', startDelay = .9})
+			setProperty('textRatings.alpha', 1)
+			startTween('textRatings-effect-alpha', 'textRatings', {alpha = 0}, 1, {ease = 'cubeInOut', startDelay = .9})
 		end
 	end
 end
@@ -183,7 +231,7 @@ function updateHud()
 	setTextString('missesText', misses)
 
 	if pref.statsBg and pref.statsType ~= 'vanilla' then
-		statsWidth = getProperty('ratingText.width') - 18
+		statsWidth = getProperty('ratingText.width') - 12
 		setGraphicSize('centerBox', statsWidth, 110)
 		setProperty('rightRounded.x', getProperty('centerBox.x') + getProperty('centerBox.width'))
 	end
@@ -209,5 +257,31 @@ function updateHudExtra()
 		setTextString('goodText', goods)
 		setTextString('badText', bads)
 		setTextString('noText', shits)
+	end
+end
+
+function grabRating()
+	local curRating = 'Sick'
+
+	if getPropertyFromGroup('notes', newId, 'rating') == 'sick' then
+		curRating = 'Sick'
+	elseif getPropertyFromGroup('notes', newId, 'rating') == 'good' then
+		curRating = 'Good'
+	elseif getPropertyFromGroup('notes', newId, 'rating') == 'bad' then
+		curRating = 'Bad'
+	elseif getPropertyFromGroup('notes', newId, 'rating') == 'shit' then
+		curRating = 'Shit'
+	end
+
+	return curRating
+end
+
+function canonevent(number)
+	if number >= 0 and number < 10 then
+		return '00' .. number
+	elseif number >= 10 and number < 100 then
+		return '0' .. number
+	else
+		return number
 	end
 end

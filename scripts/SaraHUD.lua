@@ -8,10 +8,11 @@ local pref = {
 	statsType = 'sarahud', -- Available: 'sarahud', 'vanilla'
 	skin = 'copacetic',
 	
-	extraStats = false, -- Available: false, 'default' || Soon: 'expanded', 'debug'
+	extraStats = false, -- Available: false, 'default' || Soon: 'debug'
 
 	statsBg = true,
 	coloredText = true,
+	textRatings = true,
 	
 	laneUnderlay = 0,
 	oppUnderlay = true,
@@ -19,8 +20,8 @@ local pref = {
 	optionsBind = false, -- Soon / Set it to false to access the menu from the pause menu (SaraMENU required)
 
 	-- Experimental:
-	healthBarOverlay = false, -- Soon
-	textRatings = true
+	healthBarOverlay = true,
+	timeBarOverlay = true
 }
 
 local textColors = {
@@ -39,6 +40,8 @@ local saraTools
 local shud = 'saraHUD/'..pref.skin..'/'
 local statsWidth = 20
 
+local dadHC
+local bfHC
 local hudStuff = {'scoreTxt', 'timeTxt'}
 local textStuff = {'ratingText', 'scoreText', 'missesText'}
 local iconStuff = {'ratingIcon', 'scoreIcon', 'missesIcon'}
@@ -119,12 +122,6 @@ function onCreatePost()
 			draw.text('noText', '0', 100, getProperty('noIcon.x') - 29, getProperty('noIcon.y') + 11, 'center', 'hud', 18, 'ffffff', 1, '000000', true, 'PhantomMuff.ttf')
 		end
 	end
-	
-	if pref.coloredText then
-		for i = 1, #textColors do
-			setTextColor(textColors[i][1], textColors[i][2])
-		end
-	end
 
 	if timeBarType ~= 'Disabled' then
 		draw.text('songText', songName, 400, 0, getProperty('timeBar.y'), 'center', 'hud', 16, nil, 1, nil, true, 'PhantomMuff.ttf')
@@ -156,6 +153,20 @@ function onCreatePost()
 		setProperty('textRatings.alpha', 0)
 	end
 
+	if pref.healthBarOverlay then
+		draw.sprite('healthBarOver', 'healthBarOver', getProperty('healthBar.x') - 18, getProperty('healthBar.y'), 'hud')
+		setObjectOrder('healthBarOver', getObjectOrder('healthBar') + 1)
+	end
+
+	if pref.timeBarOverlay then
+		draw.sprite('timeBarOverL', 'timeBarOver', getProperty('timeBar.x'), getProperty('timeBar.y'), 'hud')
+		setObjectOrder('timeBarOverL', getObjectOrder('timeBar') + 1)
+
+		draw.sprite('timeBarOverR', 'timeBarOver', getProperty('timeBar.x'), getProperty('timeBar.y'), 'hud')
+		setObjectOrder('timeBarOverR', getObjectOrder('timeBar') + 1)
+		setProperty('timeBarOverR.flipX', true)
+	end
+
 	if pref.laneUnderlay > 0 then
 		for i = 0, 3 do
 			draw.graphic('bfUnderlay' .. i, getPropertyFromGroup('playerStrums', i, 'x'), 0, 110, screenHeight)
@@ -167,6 +178,12 @@ function onCreatePost()
 				setProperty('dadUnderlay' .. i .. '.alpha', pref.laneUnderlay)
 				setObjectOrder('dadUnderlay' .. i, getObjectOrder('strumLineNotes') - 1)
 			end
+		end
+	end
+
+	if pref.coloredText then
+		for i = 1, #textColors do
+			setTextColor(textColors[i][1], textColors[i][2])
 		end
 	end
 end
@@ -188,6 +205,31 @@ function onUpdatePost()
 		setProperty('timeText.visible', getProperty('timeBar.visible'))
 		setProperty('songIcon.visible', getProperty('timeBar.visible'))
 		setProperty('timeIcon.visible', getProperty('timeBar.visible'))
+	end
+
+	if pref.healthBarOverlay then
+		setProperty('healthBarOver.x', getProperty('healthBar.x') - 18)
+		setProperty('healthBarOver.y', getProperty('healthBar.y'))
+		setProperty('healthBarOver.angle', getProperty('healthBar.angle'))
+		setProperty('healthBarOver.alpha', getProperty('healthBar.alpha'))
+		setProperty('healthBarOver.visible', getProperty('healthBar.visible'))
+	end
+
+	if pref.timeBarOverlay then
+		dadHC = to_hex(getProperty("dad.healthColorArray"))
+    	bfHC = to_hex(getProperty("boyfriend.healthColorArray"))
+
+    	setProperty('timeBarOverL.color', getColorFromHex(dadHC))
+		setProperty('timeBarOverL.x', getProperty('timeBar.x'))
+		setProperty('timeBarOverL.y', getProperty('timeBar.y'))
+		setProperty('timeBarOverL.alpha', getProperty('timeBar.alpha') - 0.5)
+		setProperty('timeBarOverL.visible', getProperty('timeBar.visible'))
+
+		setProperty('timeBarOverR.color', getColorFromHex(bfHC))
+		setProperty('timeBarOverR.x', getProperty('timeBar.x'))
+		setProperty('timeBarOverR.y', getProperty('timeBar.y'))
+		setProperty('timeBarOverR.alpha', getProperty('timeBar.alpha') - 0.5)
+		setProperty('timeBarOverR.visible', getProperty('timeBar.visible'))
 	end
 
 	if pref.laneUnderlay > 0 then
@@ -284,4 +326,8 @@ function canonevent(number)
 	else
 		return number
 	end
+end
+
+function to_hex(rgb)
+    return string.format("%x", (rgb[1] * 0x10000) + (rgb[2] * 0x100) + rgb[3])
 end

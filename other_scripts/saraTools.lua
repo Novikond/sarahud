@@ -82,10 +82,4 @@ util.floorDecimal = function(value, decimals) -- port of `CoolUtil.floorDecimal`
     return newValue / tempMult
 end
 
-util.traceHealthBar = function(obj, direction, offset)
-	local hp = getProperty('healthBar.percent') * (getProperty('healthBar.width') / 100)
-	local the = (getProperty('healthBar.' .. direction) + getProperty('healthBar.width') - hp)
-	setProperty(obj .. '.' .. direction, the - offset)
-end
-
 return draw, effect, util

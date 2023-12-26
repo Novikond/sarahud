@@ -1,28 +1,9 @@
 --[[
-	SaraHUD:R ver.[1.0b]
+	SaraHUD:R ver.[1.0]
 	by Novikond
 ]]
 
--- settings:
-local pref = {
-	statsType = 'sarahud', -- Available: 'sarahud', 'vanilla'
-	skin = 'copacetic',
-	
-	extraStats = false, -- Available: false, 'default' || Soon: 'debug'
-
-	statsBg = true,
-	coloredText = true,
-	textRatings = true,
-	
-	laneUnderlay = 0,
-	oppUnderlay = true,
-
-	optionsBind = false, -- Soon / Set it to false to access the menu from the pause menu (SaraMENU required)
-
-	-- Experimental:
-	healthBarOverlay = true,
-	timeBarOverlay = true
-}
+local saraTools
 
 local textColors = {
 	{'ratingText', 'f6b7bd'},
@@ -32,94 +13,97 @@ local textColors = {
 	{'sickText', 'ccffbf'},
 	{'goodText', 'fcffba'},
 	{'badText', 'ffd2bb'},
-	{'noText', 'ffbfcc'}
+	{'noText', 'ffbfcc'},
+
+	{'curStepText', 'ffc6be'},
+	{'curBeatText', 'ffc6be'},
+
+	{'textRatings', 'dffff0'}
 }
--- no more settings :pensive:
 
-local saraTools
-local shud = 'saraHUD/'..pref.skin..'/'
-local statsWidth = 20
-
-local dadHC
-local bfHC
 local hudStuff = {'scoreTxt', 'timeTxt'}
-local textStuff = {'ratingText', 'scoreText', 'missesText'}
-local iconStuff = {'ratingIcon', 'scoreIcon', 'missesIcon'}
 local statsbgthings = {'leftRounded', 'centerBox', 'rightRounded'}
 local extrDef = {'sickIcon', 'goodIcon', 'badIcon', 'noIcon'}
+local extrDebu = {'curStepIcon', 'curBeatIcon'}
+
 local DEFsarahud = {'left', 'hud', 16, 'ffffff', 1, '000000', true, 'PhantomMuff.ttf'}
 
-local newId
-local sicks = 0
-local goods = 0
-local bads = 0
-local shits = 0
+local statsWidth = 20
+local newId -- yes we totally need it
+local sicks = 0 -- yes we totally need it
+local goods = 0 -- yes we totally need it
+local bads = 0 -- yes we totally need it
+local shits = 0 -- yes we totally need it
 
-function getScriptDirectory()
-	local info = debug.getinfo(1, "S")
-	local scriptPath = info.source:sub(2)
-	return scriptPath:match("(.*/)") or ""
+function onCreate()
+	saraTools = require(getTextFromFile('data/SHUDlibs.txt') .. 'saraTools')
 end
-
-function onCreate() saraTools = require(getScriptDirectory() .. 'saraTools') end
 
 function onCreatePost()
 	for i = 1, #hudStuff do setProperty(hudStuff[i] .. '.visible', false) end
 	
-	--draw.sprite('test', shud .. 'pracIcon', 0, 0, 'hud'); screenCenter('test')
-	
+	--draw.sprite('test', 'saraHUD/pracIcon', 0, 0, 'hud'); screenCenter('test')
+
 	if not hideHud then
-		if pref.statsType == 'sarahud' then
-			if pref.statsBg then
-				draw.sprite('leftRounded', 'roundedSHUD', 52, downscroll and 9 or screenHeight - 118, 'hud', 18, 110)
+		if getModSetting('statsType', 'SaraHUD') == 'SaraHUD' then
+			if getModSetting('statsBg', 'SaraHUD') then
+				draw.sprite('leftRounded', 'GUI/roundedSHUD', 52, downscroll and 9 or screenHeight - 118, 'hud', 18, 110)
 				draw.graphic('centerBox', getProperty('leftRounded.x') + 18, getProperty('leftRounded.y'), 1, 110)
-				draw.sprite('rightRounded', 'roundedSHUD', getProperty('centerBox.x') + getProperty('centerBox.width'), getProperty('centerBox.y'), 'hud', 18, 110)
+				draw.sprite('rightRounded', 'GUI/roundedSHUD', getProperty('centerBox.x') + getProperty('centerBox.width'), getProperty('centerBox.y'), 'hud', 18, 110)
 				setProperty('rightRounded.flipX', true)
 				setProperty('leftRounded.antialiasing', false)
 				setProperty('rightRounded.antialiasing', false)
 				for i = 1, 3 do setProperty(statsbgthings[i] .. '.alpha', 0.2) end
 			end
 	
-			draw.sprite('ratingIcon', shud .. 'ratingIcon', 15, downscroll and 14 or screenHeight - 45, 'hud', 32)
-			draw.sprite('scoreIcon', shud .. 'scoreIcon', 15, downscroll and getProperty('ratingIcon.y') + 34 or getProperty('ratingIcon.y') - 34, 'hud', 32)
-			draw.sprite('missesIcon', shud .. 'missesIcon', 15, downscroll and getProperty('scoreIcon.y') + 34 or getProperty('scoreIcon.y') - 34, 'hud', 32)
+			draw.sprite('ratingIcon', 'saraHUD/ratingIcon', 15, downscroll and 14 or screenHeight - 45, 'hud', 32)
+			draw.sprite('scoreIcon', 'saraHUD/scoreIcon', 15, downscroll and getProperty('ratingIcon.y') + 34 or getProperty('ratingIcon.y') - 34, 'hud', 32)
+			draw.sprite('missesIcon', 'saraHUD/missesIcon', 15, downscroll and getProperty('scoreIcon.y') + 34 or getProperty('scoreIcon.y') - 34, 'hud', 32)
 		
-			draw.text('ratingText', '?', 0, not pref.statsBg and getProperty('ratingIcon.x') + 37 or getProperty('ratingIcon.x') + 49, getProperty('ratingIcon.y') + 6, unpack(DEFsarahud))
-			draw.text('scoreText', '0', 0, not pref.statsBg and getProperty('scoreIcon.x') + 37 or getProperty('scoreIcon.x') + 49, getProperty('scoreIcon.y') + 6, unpack(DEFsarahud))
-			draw.text('missesText', '0', 0, not pref.statsBg and getProperty('missesIcon.x') + 37 or getProperty('missesIcon.x') + 49, getProperty('missesIcon.y') + 6, unpack(DEFsarahud))
+			draw.text('ratingText', '?', 0, not getModSetting('statsBg', 'SaraHUD') and getProperty('ratingIcon.x') + 37 or getProperty('ratingIcon.x') + 49, getProperty('ratingIcon.y') + 6, unpack(DEFsarahud))
+			draw.text('scoreText', '0', 0, not getModSetting('statsBg', 'SaraHUD') and getProperty('scoreIcon.x') + 37 or getProperty('scoreIcon.x') + 49, getProperty('scoreIcon.y') + 6, unpack(DEFsarahud))
+			draw.text('missesText', '0', 0, not getModSetting('statsBg', 'SaraHUD') and getProperty('missesIcon.x') + 37 or getProperty('missesIcon.x') + 49, getProperty('missesIcon.y') + 6, unpack(DEFsarahud))
 	
-		elseif pref.statsType == 'vanilla' then 
-			if pref.statsBg then
+		elseif getModSetting('statsType', 'SaraHUD') == 'Psych-Like' then
+			if getModSetting('statsBg', 'SaraHUD') then
 				draw.graphic('centerBox', 0, downscroll and 25 or screenHeight - 50, 590, 40)
 				screenCenter('centerBox', 'x')
-				draw.sprite('leftRounded', 'roundedVanilla', getProperty('centerBox.x') - 10, getProperty('centerBox.y'), 'hud')
-				draw.sprite('rightRounded', 'roundedVanilla', getProperty('centerBox.x') + getProperty('centerBox.width'), getProperty('centerBox.y'), 'hud')
+				draw.sprite('leftRounded', 'GUI/roundedVanilla', getProperty('centerBox.x') - 10, getProperty('centerBox.y'), 'hud')
+				draw.sprite('rightRounded', 'GUI/roundedVanilla', getProperty('centerBox.x') + getProperty('centerBox.width'), getProperty('centerBox.y'), 'hud')
 				setProperty('rightRounded.flipX', true)
 				setProperty('leftRounded.antialiasing', false)
 				setProperty('rightRounded.antialiasing', false)
 				for i = 1, 3 do setProperty(statsbgthings[i] .. '.alpha', 0.2) end
 			end
 		
-			draw.sprite('ratingIcon', shud .. 'ratingIcon', (screenWidth / 2) - 295, downscroll and 30 or screenHeight - 45, 'hud', 32)
-			draw.sprite('scoreIcon', shud .. 'scoreIcon', getProperty('ratingIcon.x') + 230, downscroll and 30 or screenHeight - 45, 'hud', 32)
-			draw.sprite('missesIcon', shud .. 'missesIcon', getProperty('scoreIcon.x') + 230, downscroll and 30 or screenHeight - 45, 'hud', 32)
+			draw.sprite('scoreIcon', 'saraHUD/scoreIcon', (screenWidth / 2) - 295, downscroll and 30 or screenHeight - 45, 'hud', 32)
+			draw.sprite('missesIcon', 'saraHUD/missesIcon', getProperty('scoreIcon.x') + 210, downscroll and 30 or screenHeight - 45, 'hud', 32)
+			draw.sprite('ratingIcon', 'saraHUD/ratingIcon', getProperty('missesIcon.x') + 210, downscroll and 30 or screenHeight - 45, 'hud', 32)
 		
-			draw.text('ratingText', '?', 0, getProperty('ratingIcon.x') + 36, getProperty('ratingIcon.y') + 6, unpack(DEFsarahud))
 			draw.text('scoreText', '0', 0, getProperty('scoreIcon.x') + 36, getProperty('scoreIcon.y') + 6, unpack(DEFsarahud))
 			draw.text('missesText', '0', 0, getProperty('missesIcon.x') + 36, getProperty('missesIcon.y') + 6, unpack(DEFsarahud))
+			draw.text('ratingText', '?', 0, getProperty('ratingIcon.x') + 36, getProperty('ratingIcon.y') + 6, unpack(DEFsarahud))
 		end
 
-		if pref.extraStats == 'default' then
-			draw.sprite('sickIcon', shud .. 'sickIcon', screenWidth - 56, (screenHeight / 2) - 48, 'hud', 42)
-			draw.sprite('goodIcon', shud .. 'goodIcon', getProperty('sickIcon.x'), getProperty('sickIcon.y') + 46, 'hud', 42)
-			draw.sprite('badIcon', shud .. 'badIcon', getProperty('sickIcon.x'), getProperty('goodIcon.y') + 46, 'hud', 42)
-			draw.sprite('noIcon', shud .. 'noIcon', getProperty('sickIcon.x'), getProperty('badIcon.y') + 46, 'hud', 42)
+		if getModSetting('extraStats', 'SaraHUD') == 'Simple' then
+			draw.sprite('sickIcon', 'saraHUD/sickIcon', screenWidth - 56, (screenHeight / 2) - 48, 'hud', 42)
+			draw.sprite('goodIcon', 'saraHUD/goodIcon', getProperty('sickIcon.x'), getProperty('sickIcon.y') + 46, 'hud', 42)
+			draw.sprite('badIcon', 'saraHUD/badIcon', getProperty('sickIcon.x'), getProperty('goodIcon.y') + 46, 'hud', 42)
+			draw.sprite('noIcon', 'saraHUD/noIcon', getProperty('sickIcon.x'), getProperty('badIcon.y') + 46, 'hud', 42)
 			for i = 1, #extrDef do setProperty(extrDef[i] .. '.alpha', 0.5) end
 
 			draw.text('sickText', '0', 100, getProperty('sickIcon.x') - 29, getProperty('sickIcon.y') + 11, 'center', 'hud', 18, 'ffffff', 1, '000000', true, 'PhantomMuff.ttf')
 			draw.text('goodText', '0', 100, getProperty('goodIcon.x') - 29, getProperty('goodIcon.y') + 11, 'center', 'hud', 18, 'ffffff', 1, '000000', true, 'PhantomMuff.ttf')
 			draw.text('badText', '0', 100, getProperty('badIcon.x') - 29, getProperty('badIcon.y') + 11, 'center', 'hud', 18, 'ffffff', 1, '000000', true, 'PhantomMuff.ttf')
 			draw.text('noText', '0', 100, getProperty('noIcon.x') - 29, getProperty('noIcon.y') + 11, 'center', 'hud', 18, 'ffffff', 1, '000000', true, 'PhantomMuff.ttf')
+
+		elseif getModSetting('extraStats', 'SaraHUD') == 'Debug' then
+			draw.sprite('curStepIcon', 'saraHUD/curStepIcon', screenWidth - 56, (screenHeight / 2) - 2, 'hud', 42)
+			draw.sprite('curBeatIcon', 'saraHUD/curBeatIcon', getProperty('curStepIcon.x'), getProperty('curStepIcon.y') + 46, 'hud', 42)
+			for i = 1, #extrDebu do setProperty(extrDebu[i] .. '.alpha', 0.5) end
+
+			draw.text('curStepText', '0', 100, getProperty('curStepIcon.x') - 29, getProperty('curStepIcon.y') + 11, 'center', 'hud', 18, 'ffffff', 1, '000000', true, 'PhantomMuff.ttf')
+			draw.text('curBeatText', '0', 100, getProperty('curBeatIcon.x') - 29, getProperty('curBeatIcon.y') + 11, 'center', 'hud', 18, 'ffffff', 1, '000000', true, 'PhantomMuff.ttf')
 		end
 	end
 
@@ -128,60 +112,54 @@ function onCreatePost()
 		draw.text('timeText', util.formatTime(songLength), 80, getProperty('timeBar.x') + getProperty('timeBar.width') - 82, getProperty('timeBar.y'), 'right', 'hud', 16, nil, 1, nil, true, 'PhantomMuff.ttf')
 		screenCenter('songText', 'x')
 
-		draw.sprite('songIcon', shud .. 'songIcon', getProperty('timeBar.x') - 30, getProperty('timeBar.y') - 2, 'hud', 26)
-		draw.sprite('timeIcon', shud .. 'timerIcon', getProperty('timeBar.x') + getProperty('timeBar.width') + 5, getProperty('timeBar.y') - 2, 'hud', 26)
+		draw.sprite('songIcon', 'saraHUD/songIcon', getProperty('timeBar.x') - 30, getProperty('timeBar.y') - 2, 'hud', 26)
+		draw.sprite('timeIcon', 'saraHUD/timerIcon', getProperty('timeBar.x') + getProperty('timeBar.width') + 5, getProperty('timeBar.y') - 2, 'hud', 26)
 	end
 
-	if pref.textRatings then
+	if getModSetting('replaceHB', 'SaraHUD') then
+		loadGraphic('healthBar.bg', 'GUI/healthBar')
+	end
+
+	if getModSetting('replaceTB', 'SaraHUD') then
+		loadGraphic('timeBar.bg', 'GUI/timeBar')
+	end
+
+	if getModSetting('textRatings', 'SaraHUD') then
 		setProperty('showRating', false)
 		setProperty('showComboNum', false)
 		setProperty('showCombo', false)
 
-		if pref.statsBg then
-			draw.graphic('centerBoxR', screenWidth / 2 + 140, downscroll and getProperty('healthBar.y') + 24 or getProperty('healthBar.y') - 43, 130, 40)
-			draw.sprite('leftRoundedR', 'roundedVanilla', getProperty('centerBoxR.x') - 10, getProperty('centerBoxR.y'), 'hud')
-			draw.sprite('rightRoundedR', 'roundedVanilla', getProperty('centerBoxR.x') + getProperty('centerBoxR.width'), getProperty('centerBoxR.y'), 'hud')
+		if getModSetting('statsBg', 'SaraHUD') then
+			draw.graphic('centerBoxR', getProperty('healthBar.x') + getProperty('healthBar.width') + 49, getProperty('healthBar.y') - 10, 130, 40)
+			draw.sprite('leftRoundedR', 'GUI/roundedVanilla', getProperty('centerBoxR.x') - 10, getProperty('centerBoxR.y'), 'hud')
+			draw.sprite('rightRoundedR', 'GUI/roundedVanilla', getProperty('centerBoxR.x') + getProperty('centerBoxR.width'), getProperty('centerBoxR.y'), 'hud')
 			setProperty('rightRoundedR.flipX', true)
 			setProperty('leftRoundedR.antialiasing', false)
 			setProperty('rightRoundedR.antialiasing', false)
 			for i = 1, 3 do setProperty(statsbgthings[i] .. 'R.alpha', 0) end
 		end
 
-		draw.sprite('comboIcon', shud .. 'comboIcon', screenWidth / 2 + 140, downscroll and getProperty('healthBar.y') + 28 or getProperty('healthBar.y') - 38, 'hud', 32)
+		draw.sprite('comboIcon', 'saraHUD/comboIcon', getProperty('healthBar.x') + getProperty('healthBar.width') + 50, getProperty('healthBar.y') - 6, 'hud', 32)
 		draw.text('textRatings', 'Sick [000]', 0, getProperty('comboIcon.x') + 36, getProperty('comboIcon.y') + 6, unpack(DEFsarahud))
 		setProperty('comboIcon.alpha', 0)
 		setProperty('textRatings.alpha', 0)
 	end
 
-	if pref.healthBarOverlay then
-		draw.sprite('healthBarOver', 'healthBarOver', getProperty('healthBar.x') - 18, getProperty('healthBar.y'), 'hud')
-		setObjectOrder('healthBarOver', getObjectOrder('healthBar') + 1)
-	end
-
-	if pref.timeBarOverlay then
-		draw.sprite('timeBarOverL', 'timeBarOver', getProperty('timeBar.x'), getProperty('timeBar.y'), 'hud')
-		setObjectOrder('timeBarOverL', getObjectOrder('timeBar') + 1)
-
-		draw.sprite('timeBarOverR', 'timeBarOver', getProperty('timeBar.x'), getProperty('timeBar.y'), 'hud')
-		setObjectOrder('timeBarOverR', getObjectOrder('timeBar') + 1)
-		setProperty('timeBarOverR.flipX', true)
-	end
-
-	if pref.laneUnderlay > 0 then
+	if getModSetting('laneUnderlay', 'SaraHUD') > 0 then
 		for i = 0, 3 do
 			draw.graphic('bfUnderlay' .. i, getPropertyFromGroup('playerStrums', i, 'x'), 0, 110, screenHeight)
-			setProperty('bfUnderlay' .. i .. '.alpha', pref.laneUnderlay)
-			setObjectOrder('bfUnderlay' .. i, getObjectOrder('strumLineNotes') - 1)
+			setProperty('bfUnderlay' .. i .. '.alpha', getModSetting('laneUnderlay', 'SaraHUD'))
+			setObjectOrder('bfUnderlay' .. i, getObjectOrder('strumLineNotes') + 1)
 
-			if pref.oppUnderlay then
+			if getModSetting('oppUnderlay', 'SaraHUD') then
 				draw.graphic('dadUnderlay' .. i, getPropertyFromGroup('opponentStrums', i, 'x'), 0, 110, screenHeight)
-				setProperty('dadUnderlay' .. i .. '.alpha', pref.laneUnderlay)
-				setObjectOrder('dadUnderlay' .. i, getObjectOrder('strumLineNotes') - 1)
+				setProperty('dadUnderlay' .. i .. '.alpha', getModSetting('laneUnderlay', 'SaraHUD'))
+				setObjectOrder('dadUnderlay' .. i, getObjectOrder('strumLineNotes') + 1)
 			end
 		end
 	end
 
-	if pref.coloredText then
+	if getModSetting('coloredText', 'SaraHUD') then
 		for i = 1, #textColors do
 			setTextColor(textColors[i][1], textColors[i][2])
 		end
@@ -207,50 +185,25 @@ function onUpdatePost()
 		setProperty('timeIcon.visible', getProperty('timeBar.visible'))
 	end
 
-	if pref.healthBarOverlay then
-		setProperty('healthBarOver.x', getProperty('healthBar.x') - 18)
-		setProperty('healthBarOver.y', getProperty('healthBar.y'))
-		setProperty('healthBarOver.angle', getProperty('healthBar.angle'))
-		setProperty('healthBarOver.alpha', getProperty('healthBar.alpha'))
-		setProperty('healthBarOver.visible', getProperty('healthBar.visible'))
-	end
-
-	if pref.timeBarOverlay then
-		dadHC = to_hex(getProperty("dad.healthColorArray"))
-    	bfHC = to_hex(getProperty("boyfriend.healthColorArray"))
-
-    	setProperty('timeBarOverL.color', getColorFromHex(dadHC))
-		setProperty('timeBarOverL.x', getProperty('timeBar.x'))
-		setProperty('timeBarOverL.y', getProperty('timeBar.y'))
-		setProperty('timeBarOverL.alpha', getProperty('timeBar.alpha') - 0.5)
-		setProperty('timeBarOverL.visible', getProperty('timeBar.visible'))
-
-		setProperty('timeBarOverR.color', getColorFromHex(bfHC))
-		setProperty('timeBarOverR.x', getProperty('timeBar.x'))
-		setProperty('timeBarOverR.y', getProperty('timeBar.y'))
-		setProperty('timeBarOverR.alpha', getProperty('timeBar.alpha') - 0.5)
-		setProperty('timeBarOverR.visible', getProperty('timeBar.visible'))
-	end
-
-	if pref.laneUnderlay > 0 then
+	if getModSetting('laneUnderlay', 'SaraHUD') > 0 then
 		for i = 0, 3 do
 			setProperty('bfUnderlay' .. i .. '.x', getPropertyFromGroup('playerStrums', i, 'x'))
-			if pref.oppUnderlay then setProperty('dadUnderlay' .. i .. '.x', getPropertyFromGroup('opponentStrums', i, 'x')) end
+			if getModSetting('oppUnderlay', 'SaraHUD') then setProperty('dadUnderlay' .. i .. '.x', getPropertyFromGroup('opponentStrums', i, 'x')) end
 		end
 	end
 end
 
-function goodNoteHit(id, d, t, sus)
+function goodNoteHitPost(id, d, t, sus)
 	if not sus then
 		updateHud()
-		newId = id -- no idea why getProperty('sicks') and stuff like that doesn't work in 0.7
+		newId = id -- no idea why getProperty('sicks') doesn't work in 0.7
 
-		if pref.extraStats ~= false then 
-			updateHudExtra() 
+		if getModSetting('extraStats', 'SaraHUD') ~= 'Disabled' then
+			updateHudExtra()
 		end
 
-		if pref.textRatings then
-			if pref.statsBg then
+		if getModSetting('textRatings', 'SaraHUD') then
+			if getModSetting('statsBg', 'SaraHUD') then
 				for i = 1, 3 do
 					setProperty(statsbgthings[i] .. 'R.alpha', .2)
 					startTween(statsbgthings[i] .. 'R-effect-alpha', statsbgthings[i] .. 'R', {alpha = 0}, 1, {ease = 'cubeInOut', startDelay = .9})
@@ -267,12 +220,24 @@ function goodNoteHit(id, d, t, sus)
 end
 function noteMiss() updateHud() end
 
+function onStepHit()
+	if getModSetting('extraStats', 'SaraHUD') == 'Debug' then
+		setTextString('curStepText', curStep)
+	end
+end
+
+function onBeatHit()
+	if getModSetting('extraStats', 'SaraHUD') == 'Debug' then
+		setTextString('curBeatText', curBeat)
+	end
+end
+
 function updateHud()
 	setTextString('ratingText', util.floorDecimal(rating * 100, 2) .. '% [' .. getProperty('ratingFC') .. ']')
 	setTextString('scoreText', score)
 	setTextString('missesText', misses)
 
-	if pref.statsBg and pref.statsType ~= 'vanilla' then
+	if getModSetting('statsBg', 'SaraHUD') and getModSetting('statsType', 'SaraHUD') ~= 'Psych-Like' then
 		statsWidth = getProperty('ratingText.width') - 12
 		setGraphicSize('centerBox', statsWidth, 110)
 		setProperty('rightRounded.x', getProperty('centerBox.x') + getProperty('centerBox.width'))
@@ -280,7 +245,7 @@ function updateHud()
 end
 
 function updateHudExtra()
-	if pref.extraStats == 'default' then
+	if getModSetting('extraStats', 'SaraHUD') == 'Simple' then
 		if getPropertyFromGroup('notes', newId, 'rating') == 'sick' then
 			sicks = sicks + 1
 			effect.alpha('sickIcon', 1, .5)
@@ -326,8 +291,4 @@ function canonevent(number)
 	else
 		return number
 	end
-end
-
-function to_hex(rgb)
-    return string.format("%x", (rgb[1] * 0x10000) + (rgb[2] * 0x100) + rgb[3])
 end

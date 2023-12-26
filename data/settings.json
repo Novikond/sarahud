@@ -1,0 +1,77 @@
+[
+	{
+		"save": "statsType",
+		"name": "Stats Type:",
+		"type": "string",
+		"description": "Select your prefered way to display the gameplay statistics.",
+		"value": "SaraHUD",
+
+		"options": ["SaraHUD", "Psych-Like"]
+	},
+    {
+		"save": "extraStats",
+		"name": "Extra Stats:",
+		"type": "string",
+		"description": "Select your prefered way to display some additional statistics. (such as sicks, goods, etc.)",
+		"value": "Disabled",
+
+		"options": ["Disabled", "Simple", "Debug"]
+	},
+    {
+		"save": "statsBg",
+		"name": "Stats Background",
+		"type": "bool",
+		"description": "If checked, adds translucent boxes under most HUD elements for better visibility.",
+		"value": true
+	},
+	{
+		"save": "replaceHB",
+		"name": "Health Bar Gradient",
+		"type": "bool",
+		"description": "If checked, replaces the Health Bar sprite with the gradient version.",
+		"value": true
+	},
+	{
+		"save": "replaceTB",
+		"name": "Time Bar Gradient",
+		"type": "bool",
+		"description": "If checked, replaces the Time Bar sprite with the gradient version.",
+		"value": true
+	},
+    {
+		"save": "coloredText",
+		"name": "Colored Text",
+		"type": "bool",
+		"description": "If checked, most text elements in the HUD will be colorized.",
+		"value": true
+	},
+    {
+		"save": "textRatings",
+		"name": "Replace Combo Pop-Outs",
+		"type": "bool",
+		"description": "If checked, removes FNF's combo pop-outs and replaces them with the SaraHUD version.",
+		"value": false
+	},
+	{
+		"save": "laneUnderlay",
+		"name": "Lane Underlay:",
+		"type": "percent",
+		"description": "How much transparent should the Lane Underlay be.",
+		"value": 0,
+        "format": "%v%",
+	
+		"min": 0,
+		"max": 1,
+		"step": 0.1,
+
+		"decimals": 1,
+		"scroll": 1
+	},
+    {
+		"save": "oppUnderlay",
+		"name": "Opponent Underlay",
+		"type": "bool",
+		"description": "If checked, adds Lane Underlay for the opponent.",
+		"value": false
+	}
+]

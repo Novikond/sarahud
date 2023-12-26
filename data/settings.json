@@ -56,7 +56,7 @@
 		"save": "laneUnderlay",
 		"name": "Lane Underlay:",
 		"type": "percent",
-		"description": "How much transparent should the Lane Underlay be.",
+		"description": "How transparent should the Lane Underlay be.",
 		"value": 0,
         "format": "%v%",
 	

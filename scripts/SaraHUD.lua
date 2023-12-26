@@ -232,6 +232,12 @@ function onBeatHit()
 	end
 end
 
+function onSongStart()
+	if timeBarType ~= 'Disabled' then
+		setTextString('timeText', util.formatTime(songLength))
+	end
+end
+
 function updateHud()
 	setTextString('ratingText', util.floorDecimal(rating * 100, 2) .. '% [' .. getProperty('ratingFC') .. ']')
 	setTextString('scoreText', score)

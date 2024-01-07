@@ -45,6 +45,13 @@
 		"description": "If checked, most text elements in the HUD will be colorized.",
 		"value": true
 	},
+	{
+		"save": "timebarIcons",
+		"name": "Time Bar Icons",
+		"type": "bool",
+		"description": "If unchecked, hides all icons near the Time Bar.",
+		"value": true
+	},
     {
 		"save": "textRatings",
 		"name": "Replace Combo Pop-Outs",

@@ -11,8 +11,6 @@ SaraHUD is a customizable HUD (Heads-Up Display) that runs in [Psych Engine](htt
 ## Preferences
 
 Open built-in Psych Engine mods menu, select SaraHUD and click on the gear button.
-
-You can use [Notepad++](https://github.com/notepad-plus-plus/notepad-plus-plus) or [Visual Studio Code](https://github.com/Microsoft/vscode) to customise the preferences.
 ## Other
 
 If you have any questions, there is an official [SaraHUD Discord server](https://discord.gg/T4AzfvsXtb), we'll try to help.

@@ -1,5 +1,5 @@
 --[[
-	SaraHUD:R ver.[1.0]
+	SaraHUD:R ver.[1.1]
 	by Novikond
 ]]
 
@@ -34,6 +34,7 @@ local sicks = 0 -- yes we totally need it
 local goods = 0 -- yes we totally need it
 local bads = 0 -- yes we totally need it
 local shits = 0 -- yes we totally need it
+local ratingthing = '%'
 
 function onCreate()
 	saraTools = require(getTextFromFile('data/SHUDlibs.txt') .. 'saraTools')
@@ -83,7 +84,21 @@ function onCreatePost()
 			draw.text('scoreText', '0', 0, getProperty('scoreIcon.x') + 36, getProperty('scoreIcon.y') + 6, unpack(DEFsarahud))
 			draw.text('missesText', '0', 0, getProperty('missesIcon.x') + 36, getProperty('missesIcon.y') + 6, unpack(DEFsarahud))
 			draw.text('ratingText', '?', 0, getProperty('ratingIcon.x') + 36, getProperty('ratingIcon.y') + 6, unpack(DEFsarahud))
+
+	elseif getModSetting('statsType', 'SaraHUD') == 'FNF\'-Like' then
+		if getModSetting('statsBg', 'SaraHUD') then
+			draw.graphic('centerBox', getProperty('healthBar.x') + getProperty('healthBar.width') - 130, downscroll and 25 or screenHeight - 50, 130, 40)
+			draw.sprite('leftRounded', 'GUI/roundedVanilla', getProperty('centerBox.x') - 10, getProperty('centerBox.y'), 'hud')
+			draw.sprite('rightRounded', 'GUI/roundedVanilla', getProperty('centerBox.x') + getProperty('centerBox.width'), getProperty('centerBox.y'), 'hud')
+			setProperty('rightRounded.flipX', true)
+			setProperty('leftRounded.antialiasing', false)
+			setProperty('rightRounded.antialiasing', false)
+			for i = 1, 3 do setProperty(statsbgthings[i] .. '.alpha', 0.2) end
 		end
+	
+		draw.sprite('scoreIcon', 'saraHUD/scoreIcon', getProperty('healthBar.x') + getProperty('healthBar.width') - 130, downscroll and 30 or screenHeight - 45, 'hud', 32)
+		draw.text('scoreText', '0', 0, getProperty('scoreIcon.x') + 36, getProperty('scoreIcon.y') + 6, unpack(DEFsarahud))
+	end
 
 		if getModSetting('extraStats', 'SaraHUD') == 'Simple' then
 			draw.sprite('sickIcon', 'saraHUD/sickIcon', screenWidth - 56, (screenHeight / 2) - 48, 'hud', 42)
@@ -121,7 +136,6 @@ function onCreatePost()
 	if getModSetting('replaceHB', 'SaraHUD') then
 		loadGraphic('healthBar.bg', 'GUI/healthBar')
 	end
-
 	if getModSetting('replaceTB', 'SaraHUD') then
 		loadGraphic('timeBar.bg', 'GUI/timeBar')
 	end
@@ -195,7 +209,7 @@ function onUpdatePost()
 	end
 end
 
-function goodNoteHitPost(id, d, t, sus)
+function goodNoteHit(id, d, t, sus)
 	if not sus then
 		updateHud()
 		newId = id -- no idea why getProperty('sicks') doesn't work in 0.7
@@ -241,7 +255,7 @@ function onSongStart()
 end
 
 function updateHud()
-	setTextString('ratingText', util.floorDecimal(rating * 100, 2) .. '% [' .. getProperty('ratingFC') .. ']')
+	setTextString('ratingText', util.floorDecimal(rating * 100, 2) .. whatRating())
 	setTextString('scoreText', score)
 	setTextString('missesText', misses)
 
@@ -277,7 +291,6 @@ end
 
 function grabRating()
 	local curRating = 'Sick'
-
 	if getPropertyFromGroup('notes', newId, 'rating') == 'sick' then
 		curRating = 'Sick'
 	elseif getPropertyFromGroup('notes', newId, 'rating') == 'good' then
@@ -287,8 +300,20 @@ function grabRating()
 	elseif getPropertyFromGroup('notes', newId, 'rating') == 'shit' then
 		curRating = 'Shit'
 	end
-
 	return curRating
+end
+
+function whatRating()
+	if getModSetting('ratings', 'SaraHUD') == 'FC' then
+		ratingthing = '% [' .. getProperty('ratingFC') .. ']'
+	elseif getModSetting('ratings', 'SaraHUD') == 'Name' then
+		ratingthing = '% [' .. getProperty('ratingName') .. ']'
+	elseif getModSetting('ratings', 'SaraHUD') == 'FC and Name' then
+		ratingthing = '% ' .. getProperty('ratingName') .. ' [' .. getProperty('ratingFC') .. ']'
+	else
+		ratingthing = '%'
+	end
+	return ratingthing
 end
 
 function canonevent(number)

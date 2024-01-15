@@ -6,7 +6,7 @@
 		"description": "Select your prefered way to display the gameplay statistics.",
 		"value": "SaraHUD",
 
-		"options": ["SaraHUD", "Psych-Like"]
+		"options": ["SaraHUD", "Psych-Like", "FNF'-Like"]
 	},
     {
 		"save": "extraStats",
@@ -16,6 +16,15 @@
 		"value": "Disabled",
 
 		"options": ["Disabled", "Simple", "Debug"]
+	},
+	{
+		"save": "ratings",
+		"name": "Ratings:",
+		"type": "string",
+		"description": "Modify the rating text. (You may encounter bugs if you select \"None\")",
+		"value": "FC",
+
+		"options": ["FC", "Name", "FC and Name", "None"]
 	},
     {
 		"save": "statsBg",

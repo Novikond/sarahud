@@ -1,6 +1,6 @@
---[[	By Novikond
-	Activate SaraTools by putting this thing on top of any script:
-	local saraTools = require('saraTools')
+--[[
+	-- > SaraTools < -- [by Novikond]
+	local saraTools = require('saraTools location')
 ]]
 
 draw = {}

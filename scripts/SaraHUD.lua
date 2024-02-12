@@ -1,7 +1,4 @@
---[[
-	SaraHUD:R ver.[1.1]
-	by Novikond
-]]
+-- > SaraHUD:R < -- [by Novikond]
 
 local saraTools
 
@@ -28,6 +25,7 @@ local extrDebu = {'curStepIcon', 'curBeatIcon'}
 
 local DEFsarahud = {'left', 'hud', 16, 'ffffff', 1, '000000', true, 'PhantomMuff.ttf'}
 
+local bruh = false -- errors check
 local statsWidth = 20
 local newId -- yes we totally need it
 local sicks = 0 -- yes we totally need it
@@ -37,7 +35,21 @@ local shits = 0 -- yes we totally need it
 local ratingthing = '%'
 
 function onCreate()
-	saraTools = require(getTextFromFile('data/SHUDlibs.txt') .. 'saraTools')
+	if version ~= '0.7.3' and getModSetting('outdateCheck', 'SaraHUD') then
+		setVar('shud_outdated', true)
+		bruh = true
+	end
+
+	if not checkFileExists(getTextFromFile('data/SHUDlibs.txt') .. 'saraTools.lua') then
+		setVar('shud_noLibs', true)
+		bruh = true
+	else
+		saraTools = require('mods/' .. getTextFromFile('data/SHUDlibs.txt') .. 'saraTools')
+	end
+
+	if bruh then 
+		addLuaScript('other_scripts/error.lua')
+	end
 end
 
 function onCreatePost()

@@ -89,5 +89,12 @@
 		"type": "bool",
 		"description": "If checked, adds Lane Underlay for the opponent.",
 		"value": false
+	},
+	{
+		"save": "outdateCheck",
+		"name": "Check if Outdated",
+		"type": "bool",
+		"description": "If unchecked, removes the Psych Engine version check.",
+		"value": true
 	}
 ]

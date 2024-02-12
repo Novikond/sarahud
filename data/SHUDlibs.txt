@@ -1,1 +1,1 @@
-mods/SaraHUD/other_scripts/
+SaraHUD/other_scripts/

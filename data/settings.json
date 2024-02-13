@@ -3,7 +3,7 @@
 		"save": "statsType",
 		"name": "Stats Type:",
 		"type": "string",
-		"description": "Select your prefered way to display the gameplay statistics.",
+		"description": "Select your prefered way to display gameplay statistics.",
 		"value": "SaraHUD",
 
 		"options": ["SaraHUD", "Psych-Like", "FNF'-Like"]
@@ -12,7 +12,7 @@
 		"save": "extraStats",
 		"name": "Extra Stats:",
 		"type": "string",
-		"description": "Select your prefered way to display some additional statistics. (such as sicks, goods, etc.)",
+		"description": "Select your prefered way to display ratings, such as Sick!(s), Good(s), etc.",
 		"value": "Disabled",
 
 		"options": ["Disabled", "Simple", "Debug"]
@@ -30,49 +30,49 @@
 		"save": "statsBg",
 		"name": "Stats Background",
 		"type": "bool",
-		"description": "If checked, adds translucent boxes under most HUD elements for better visibility.",
+		"description": "Adds translucent boxes under most HUD elements for better visibility.",
 		"value": true
 	},
 	{
 		"save": "replaceHB",
 		"name": "Health Bar Gradient",
 		"type": "bool",
-		"description": "If checked, replaces the Health Bar sprite with the gradient version.",
+		"description": "Replaces the Health Bar sprite with the gradient version.",
 		"value": true
 	},
 	{
 		"save": "replaceTB",
 		"name": "Time Bar Gradient",
 		"type": "bool",
-		"description": "If checked, replaces the Time Bar sprite with the gradient version.",
+		"description": "Replaces the Time Bar sprite with the gradient version.",
 		"value": true
 	},
     {
 		"save": "coloredText",
 		"name": "Colored Text",
 		"type": "bool",
-		"description": "If checked, most text elements in the HUD will be colorized.",
+		"description": "Colors most text elements in the HUD.",
 		"value": true
 	},
 	{
 		"save": "timebarIcons",
 		"name": "Time Bar Icons",
 		"type": "bool",
-		"description": "If unchecked, hides all icons near the Time Bar.",
+		"description": "Shows or hides icons near the Time Bar.",
 		"value": true
 	},
     {
 		"save": "textRatings",
 		"name": "Replace Combo Pop-Outs",
 		"type": "bool",
-		"description": "If checked, removes FNF's combo pop-outs and replaces them with the SaraHUD version.",
+		"description": "Toggle between Funkin' or SaraHUD combo pop-outs.",
 		"value": false
 	},
 	{
 		"save": "laneUnderlay",
 		"name": "Lane Underlay:",
 		"type": "percent",
-		"description": "How transparent should the Lane Underlay be.",
+		"description": "Adds black lanes underneath the notes, with adjustable transparency.",
 		"value": 0,
         "format": "%v%",
 	
@@ -87,14 +87,14 @@
 		"save": "oppUnderlay",
 		"name": "Opponent Underlay",
 		"type": "bool",
-		"description": "If checked, adds Lane Underlay for the opponent.",
+		"description": "Adds the Lane Underlay to the opponent's side.",
 		"value": false
 	},
 	{
 		"save": "outdateCheck",
 		"name": "Check if Outdated",
 		"type": "bool",
-		"description": "If unchecked, removes the Psych Engine version check.",
+		"description": "Ignores Psych Engine version checking.",
 		"value": true
 	}
 ]

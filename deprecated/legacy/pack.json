@@ -1,0 +1,7 @@
+{
+	"name": "SaraHUD Legacy",
+	"description": "by Novikond\nwith love <3",
+	"restart":false,
+	"runsGlobally": true,
+	"color": [170, 136, 255]
+}

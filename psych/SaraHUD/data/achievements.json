@@ -1,0 +1,13 @@
+[
+	{
+		"save": "hide_all",
+		"name": "Out of Sight",
+		"description": "Disable everything you can in SaraHUD."
+	},
+    {
+		"save": "she",
+		"name": "Uninvited Guests",
+		"description": "It's time to leave your cocoon.",
+        "hidden": true
+	}
+]

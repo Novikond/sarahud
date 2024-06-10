@@ -1,0 +1,33 @@
+1.
+	Style: classicIco
+	Timer
+	Song Name
+	HBar Overlay
+	Constant Icons
+
+2.
+	Style: classicTxt
+	Timer
+	Custom HBar Colors
+	
+3.
+	Style: modern
+	Song Name
+	HBar Overlay
+	Constant Icons
+	HUD Miss
+	
+4.
+	Style: cherry
+	Timer
+	HBar Overlay
+	Constant Icons
+	Arrow
+	
+5.
+	Style: disStrum
+	Timer
+	Song Name
+	HBar Overlay
+	Constant Icons
+	Lane Underlay (alpha: 0.5)

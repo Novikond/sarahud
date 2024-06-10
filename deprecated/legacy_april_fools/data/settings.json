@@ -1,0 +1,96 @@
+[
+	{
+		"save": "style",
+		"name": "Style:",
+		"type": "string",
+		"description": "main thing of hud",
+		"value": "classicIco",
+
+		"options": ["classicTxt", "classicIco", "modern", "cherry", "disStrum"]
+	},
+    {
+		"save": "update",
+		"name": "Update Numbers",
+		"type": "bool",
+		"description": "make timer, song-name and health bar overlay have the same alpha as health bar",
+		"value": true
+	},
+	{
+		"save": "timer",
+		"name": "Timer",
+		"type": "bool",
+		"description": "display timer",
+		"value": true
+	},
+	{
+		"save": "songName",
+		"name": "Song Name",
+		"type": "bool",
+		"description": "display song name",
+		"value": true
+	},
+    {
+		"save": "HBoverlay",
+		"name": "Health Bar Overlay",
+		"type": "bool",
+		"description": "health bar overlay",
+		"value": true
+	},
+	{
+		"save": "iconPoz",
+		"name": "Icon Poz",
+		"type": "bool",
+		"description": "icons not moving and on corners of health bar",
+		"value": true
+	},
+    {
+		"save": "hudMiss",
+		"name": "Hud Miss",
+		"type": "bool",
+		"description": "purple miss animation for some hud stuff",
+		"value": true
+	},
+	{
+		"save": "botplHideInfo",
+		"name": "Botplay Hides",
+		"type": "bool",
+		"description": "when you use botplay, it hide info",
+		"value": true
+	},
+	{
+		"save": "laneUnderlay",
+		"name": "Lane Underlay:",
+		"type": "percent",
+		"description": "set up transparency",
+		"value": 0,
+        "format": "%v%",
+	
+		"min": 0,
+		"max": 1,
+		"step": 0.1,
+
+		"decimals": 1,
+		"scroll": 1
+	},
+    {
+		"save": "oppUnderlay",
+		"name": "Opponent Underlay",
+		"type": "bool",
+		"description": "enable underlay for opponent too",
+		"value": false
+	},
+	{
+		"save": "funkyArrow",
+		"name": "Arrow",
+		"type": "bool",
+		"description": "arrow, that point where your hp (helpful with \"iconPoz\" pref)",
+		"value": true
+	},
+	{
+		"save": "customHBcolors",
+		"name": "Custom Health Bar Colors",
+		"type": "bool",
+		"description": "enable custom colors for health bar",
+		"value": false
+	}
+]

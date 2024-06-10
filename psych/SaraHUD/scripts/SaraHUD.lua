@@ -18,7 +18,6 @@ local textColors = {
 	{'textRatings', 'dffff0'}
 }
 
-local hudStuff = {'scoreTxt', 'timeTxt'}
 local statsbgthings = {'leftRounded', 'centerBox', 'rightRounded'}
 local extrDef = {'sickIcon', 'goodIcon', 'badIcon', 'noIcon'}
 local extrDebu = {'curStepIcon', 'curBeatIcon'}
@@ -53,9 +52,14 @@ function onCreate()
 end
 
 function onCreatePost()
-	for i = 1, #hudStuff do setProperty(hudStuff[i] .. '.visible', false) end
+	setProperty('scoreTxt.visible', false)
+
+	if not isAchievementUnlocked('hide_all') and getModSetting('statsType', 'SaraHUD') == 'FNF\'-Like' and getModSetting('extraStats', 'SaraHUD') == 'Disabled' and getModSetting('ratings', 'SaraHUD') == 'None' and not getModSetting('etternaBar', 'SaraHUD') and not getModSetting('statsBg', 'SaraHUD') and not getModSetting('replaceHB', 'SaraHUD') and not getModSetting('replaceTB', 'SaraHUD') and not getModSetting('coloredText', 'SaraHUD') and not getModSetting('timebarIcons', 'SaraHUD') and not getModSetting('textRatings', 'SaraHUD') and getModSetting('laneUnderlay', 'SaraHUD') == 0 then
+		unlockAchievement('hide_all')
+	end
 	
 	--draw.sprite('test', 'saraHUD/pracIcon', 0, 0, 'hud'); screenCenter('test')
+	--draw.text('test', 'bah', 0, 10, 10, 'left', 'other', 24); screenCenter('test')
 
 	if not hideHud then
 		if getModSetting('statsType', 'SaraHUD') == 'SaraHUD' then
@@ -134,15 +138,22 @@ function onCreatePost()
 		end
 	end
 
-	if timeBarType ~= 'Disabled' then
-		draw.text('songText', songName, 400, 0, getProperty('timeBar.y'), 'center', 'hud', 16, nil, 1, nil, true, 'PhantomMuff.ttf')
-		draw.text('timeText', util.formatTime(songLength), 80, getProperty('timeBar.x') + getProperty('timeBar.width') - 82, getProperty('timeBar.y'), 'right', 'hud', 16, nil, 1, nil, true, 'PhantomMuff.ttf')
+	if timeBarType ~= 'Disabled' and getModSetting('etternaBar', 'SaraHUD') then
+		setProperty('timeTxt.visible', false)
+		
+		draw.text('songText', songName, 400, 0, getProperty('timeBar.y'), 'center', 'hud', 18, nil, 2, nil, true, 'PhantomMuff.ttf')
+		draw.text('timeText', util.formatTime(songLength), 80, getProperty('timeBar.x') + getProperty('timeBar.width') - 82, getProperty('timeBar.y'), 'right', 'hud', 18, nil, 2, nil, true, 'PhantomMuff.ttf')
 		screenCenter('songText', 'x')
 
 		if getModSetting('timebarIcons', 'SaraHUD') then
 			draw.sprite('songIcon', 'saraHUD/songIcon', getProperty('timeBar.x') - 30, getProperty('timeBar.y') - 2, 'hud', 26)
 			draw.sprite('timeIcon', 'saraHUD/timerIcon', getProperty('timeBar.x') + getProperty('timeBar.width') + 5, getProperty('timeBar.y') - 2, 'hud', 26)
 		end
+	else
+		setTextSize('timeTxt', 18)
+		setTextFont('timeTxt', 'PhantomMuff.ttf')
+		setProperty('timeTxt.antialiasing', true)
+		setProperty('timeTxt.y', getProperty('timeBar.y'))
 	end
 
 	if getModSetting('replaceHB', 'SaraHUD') then

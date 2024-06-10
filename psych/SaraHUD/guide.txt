@@ -1,0 +1,17 @@
+```
+📁 mods
+	📁 SaraHUD
+		📁 data
+		📁 fonts
+		📁 images
+		📁 other_scripts
+		📁 scripts
+		🖼️ guide.png
+		📄 guide.txt
+		📄 pack.json
+		🖼️ pack.png
+```
+
+if you dare to change ANYTHING (including names of the files), don't cry about malfunctioning
+
+if you have any questions, there you go https://sarahud.carrd.co/

@@ -24,7 +24,7 @@ local errorsState = { -- messages
         If you wish to stop seeing this message, go to the mod's settings and disable version checking.
 
 
-        Press <TAB> to open SaraHUD's GameBanana page.
+        Press <TAB> to open the GameBanana page.
 
         Press <ENTER> to exit the song.
         ]]
@@ -38,7 +38,7 @@ local errorsState = { -- messages
         Lost? Read through the guide on SaraHUD's GameBanana page.
 
 
-        Press <TAB> to open Psych's GameBanana page.
+        Press <TAB> to open the GameBanana page.
 
         Press <ENTER> to exit the song.
         ]]

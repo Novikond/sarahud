@@ -1,0 +1,134 @@
+[
+	{
+		"save": "divider-1",
+		"name": "> DISPLAYED INFO <",
+		"type": "string",
+		"description": "Settings that affect what and how statistics are displayed.",
+		"value": "",
+
+		"options": [""]
+	},
+	{
+		"save": "statsType",
+		"name": "Stats Type:",
+		"type": "string",
+		"description": "Select your prefered way to display the gameplay statistics.",
+		"value": "SaraHUD",
+
+		"options": ["SaraHUD", "Psych-Like", "Vanilla"]
+	},
+    {
+		"save": "extraStats",
+		"name": "Extra Stats",
+		"type": "bool",
+		"description": "Shows additional information. (such as sicks, goods, etc.)",
+		"value": false
+	},
+	{
+		"save": "etternaBar",
+		"name": "Etterna-Styled Time Bar",
+		"type": "bool",
+		"description": "If checked, the style of information displayed on the Time Bar will be similar to the Time Bar from the game Etterna.",
+		"value": true
+	},
+	{
+		"save": "ratings",
+		"name": "Ratings:",
+		"type": "string",
+		"description": "Modify the rating text.",
+		"value": "FC",
+
+		"options": ["FC", "Name", "None"]
+	},
+	{
+		"save": "divider-2",
+		"name": "> VISUALS <",
+		"type": "string",
+		"description": "Settings, related to the visual part of the UI.",
+		"value": "",
+
+		"options": [""]
+	},
+	{
+		"save": "replaceHB",
+		"name": "Health Bar Gradient",
+		"type": "bool",
+		"description": "If checked, replaces the Health Bar sprite with the gradient version.",
+		"value": true
+	},
+	{
+		"save": "replaceTB",
+		"name": "Time Bar Gradient",
+		"type": "bool",
+		"description": "If checked, replaces the Time Bar sprite with the gradient version.",
+		"value": true
+	},
+    {
+		"save": "coloredText",
+		"name": "Colored Text",
+		"type": "bool",
+		"description": "If checked, most text elements in the HUD will be colorized.",
+		"value": true
+	},
+	{
+		"save": "timebarIcons",
+		"name": "Time Bar Icons",
+		"type": "bool",
+		"description": "If unchecked, hides all icons near the Time Bar.",
+		"value": true
+	},
+    {
+		"save": "comboReplace",
+		"name": "Replace Combo Pop-Outs",
+		"type": "bool",
+		"description": "If checked, removes FNF's combo pop-outs and replaces them with the SaraHUD version.",
+		"value": false
+	},
+	{
+		"save": "laneUnderlay",
+		"name": "Lane Underlay:",
+		"type": "percent",
+		"description": "How transparent should the Lane Underlay be.",
+		"value": 0,
+        "format": "%v%",
+	
+		"min": 0,
+		"max": 1,
+		"step": 0.1,
+
+		"decimals": 1,
+		"scroll": 1
+	},
+    {
+		"save": "oppUnderlay",
+		"name": "Opponent Underlay",
+		"type": "bool",
+		"description": "If checked, adds Lane Underlay for the opponent.",
+		"value": false
+	},
+	{
+		"save": "divider-3",
+		"name": "> TECHNICAL <",
+		"type": "string",
+		"description": "Settings, related to the technical part of the UI and do not affect it's visuals in any way.",
+		"value": "",
+
+		"options": [""]
+	},
+	{
+		"save": "outdateCheck",
+		"name": "Check for Updates",
+		"type": "bool",
+		"description": "If unchecked, removes the Psych Engine version check.",
+		"value": true
+	},
+	{
+		"save": "rasmasa",
+		"name": "<3",
+		"type": "string",
+		"description": "If you try to please audiences, uncritically accepting their tastes, it can only mean that you have no respect for them. <Andrei Tarkovsky>",
+		"value": "",
+
+		"options": [""]
+	}
+]

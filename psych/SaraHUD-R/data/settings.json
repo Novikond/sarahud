@@ -50,6 +50,13 @@
 		"options": [""]
 	},
 	{
+		"save": "notesPrior",
+		"name": "Notes Priority",
+		"type": "bool",
+		"description": "If checked, display incoming notes above Health Bar and other elements.",
+		"value": true
+	},
+	{
 		"save": "replaceHB",
 		"name": "Health Bar Gradient",
 		"type": "bool",

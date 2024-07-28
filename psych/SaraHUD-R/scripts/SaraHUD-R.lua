@@ -3,7 +3,7 @@
 
 -------- DEBUG --------
 local noOptionsMenu = false -- if [true], uses the old fashioned way to manage preferences
-local pref = {
+local pref = { -- all the preferences are executed in this order, don't tweak the order plz
     -- disaplayed info
     statsType = 'SaraHUD',
     extraStats = false,
@@ -11,6 +11,7 @@ local pref = {
     ratings = 'FC',
 
     -- visuals
+    notesPrior = true,
     replaceHB = true,
     replaceTB = true,
     timebarIcons = true,
@@ -82,7 +83,7 @@ local createState = {
                 uit.graphics.text('missesText', '0', getProperty('missesIcon.x') + 50, getProperty('missesIcon.y') + 9)
             
             elseif getPref('statsType') == 'Psych-Like' then
-                uit.graphics.obj('infoBg', 0, downscroll and 25 or screenHeight - 50, 600, 40)
+                uit.graphics.obj('infoBg', 0, getProperty('healthBar.y') + 30, 600, 40)
                 screenCenter('infoBg', 'x')
 
                 uit.graphics.img('infoBgLeft', 'GUI/fade-vanilla', getProperty('infoBg.x') - 16, getProperty('infoBg.y'))
@@ -94,16 +95,16 @@ local createState = {
                     setProperty(bg[i] .. '.alpha', .26)
                 end
 
-                uit.graphics.img('scoreIcon', 'saraHUD/scoreIcon', (screenWidth / 2) - 295, downscroll and 30 or screenHeight - 45, .54)
-                uit.graphics.img('missesIcon', 'saraHUD/missesIcon', getProperty('scoreIcon.x') + 200, downscroll and 30 or screenHeight - 45, .54)
-                uit.graphics.img('ratingIcon', 'saraHUD/ratingIcon', getProperty('missesIcon.x') + 160, downscroll and 30 or screenHeight - 45, .54)
+                uit.graphics.img('scoreIcon', 'saraHUD/scoreIcon', (screenWidth / 2) - 295, getProperty('healthBar.y') + 34, .54)
+                uit.graphics.img('missesIcon', 'saraHUD/missesIcon', getProperty('scoreIcon.x') + 200, getProperty('healthBar.y') + 34, .54)
+                uit.graphics.img('ratingIcon', 'saraHUD/ratingIcon', getProperty('missesIcon.x') + 160, getProperty('healthBar.y') + 34, .54)
 
                 uit.graphics.text('scoreText', '0', getProperty('scoreIcon.x') + 38, getProperty('scoreIcon.y') + 6, 0)
                 uit.graphics.text('missesText', '0', getProperty('missesIcon.x') + 38, getProperty('missesIcon.y') + 6, 0)
                 uit.graphics.text('ratingText', '?', getProperty('ratingIcon.x') + 38, getProperty('ratingIcon.y') + 6, 0)
 
             elseif getPref('statsType') == 'Vanilla' then
-                uit.graphics.obj('infoBg',  (screenWidth / 2) + 100, downscroll and 25 or screenHeight - 50, 150, 40)
+                uit.graphics.obj('infoBg',  (screenWidth / 2) + 100, getProperty('healthBar.y') + 30, 140, 40)
                 uit.graphics.img('infoBgLeft', 'GUI/fade-vanilla', getProperty('infoBg.x') - 16, getProperty('infoBg.y'))
                 uit.graphics.img('infoBgRight', 'GUI/fade-vanilla', getProperty('infoBg.x') + getProperty('infoBg.width'), getProperty('infoBg.y'))
                 setProperty('infoBgRight.flipX', true)
@@ -113,7 +114,7 @@ local createState = {
                     setProperty(bg[i] .. '.alpha', .26)
                 end
 
-                uit.graphics.img('scoreIcon', 'saraHUD/scoreIcon', (screenWidth / 2) + 110, downscroll and 30 or screenHeight - 45, .54)
+                uit.graphics.img('scoreIcon', 'saraHUD/scoreIcon', (screenWidth / 2) + 110, getProperty('healthBar.y') + 34, .54)
                 uit.graphics.text('scoreText', '0', getProperty('scoreIcon.x') + 38, getProperty('scoreIcon.y') + 6, 0)
             end
         end
@@ -176,6 +177,10 @@ local createState = {
         for i = 1, #comboThings do
             setProperty(comboThings[i] .. '.alpha', 0)
         end
+    end,
+
+    notesPrior = function()
+        setObjectOrder('noteGroup', getObjectOrder('healthBar') + 100)
     end,
 
     replaceHB = function()

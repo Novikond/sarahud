@@ -1,5 +1,13 @@
 -- > UI Tools (UIT) < -- [by Novikond]
 
+function properOrder() -- on 0.7.2 if i'm using noteGroup it breaks so uh sorry
+    local order = getObjectOrder('noteGroup')
+    if version < '1.0' then
+        order = getObjectOrder('healthBar') + 100
+    end
+    return order
+end
+
 uit = {
     graphics = {
         text = function(tag, text, x, y, width, alignment) -- draw a text
@@ -10,7 +18,7 @@ uit = {
             setTextSize(tag, 18)
             setProperty(tag .. '.antialiasing', true)
             setTextFont(tag, 'PhantomMuff.ttf')
-            setObjectOrder(tag, getObjectOrder('healthBar') + 100)
+            setObjectOrder(tag, properOrder())
             addLuaText(tag, true)
         end,
 
@@ -19,7 +27,7 @@ uit = {
             makeLuaSprite(tag, image or exampleSprite, x or 0, y or 0) 
             setObjectCamera(tag, 'hud')
             scaleObject(tag, scale or 1, scale or 1)
-            setObjectOrder(tag, getObjectOrder('healthBar') + 100)
+            setObjectOrder(tag, properOrder())
             addLuaSprite(tag, true)
         end,
 
@@ -27,6 +35,7 @@ uit = {
             makeLuaSprite(tag, nil, x or 0, y or 0)
             makeGraphic(tag, width or 100, height or 100, color or '000000')
             setObjectCamera(tag, 'hud')
+            setObjectOrder(tag, properOrder())
             addLuaSprite(tag, true)
         end,
 
@@ -89,6 +98,10 @@ uit = {
         
             local newValue = math.floor(value * tempMult)
             return newValue / tempMult
+        end,
+
+        lerp = function(a, b, t)
+            return a + (b - a) * t
         end
     }
 }

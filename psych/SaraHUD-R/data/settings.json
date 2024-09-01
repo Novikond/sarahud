@@ -1,6 +1,7 @@
 [
 	{
 		"save": "divider-1",
+		"translation_key": "divider-1",
 		"name": "> DISPLAYED INFO <",
 		"type": "string",
 		"description": "Settings that affect what and how statistics are displayed.",
@@ -10,6 +11,7 @@
 	},
 	{
 		"save": "statsType",
+		"translation_key": "statsType",
 		"name": "Stats Type:",
 		"type": "string",
 		"description": "Select your prefered way to display the gameplay statistics.",
@@ -19,6 +21,7 @@
 	},
     {
 		"save": "extraStats",
+		"translation_key": "extraStats",
 		"name": "Extra Stats",
 		"type": "bool",
 		"description": "Shows additional information. (such as sicks, goods, etc.)",
@@ -26,6 +29,7 @@
 	},
 	{
 		"save": "etternaBar",
+		"translation_key": "etternaBar",
 		"name": "Etterna-Styled Time Bar",
 		"type": "bool",
 		"description": "If checked, the style of information displayed on the Time Bar will be similar to the Time Bar from the game Etterna.",
@@ -33,6 +37,7 @@
 	},
 	{
 		"save": "ratings",
+		"translation_key": "ratings",
 		"name": "Ratings:",
 		"type": "string",
 		"description": "Modify the rating text.",
@@ -42,6 +47,7 @@
 	},
 	{
 		"save": "divider-2",
+		"translation_key": "divider-2",
 		"name": "> VISUALS <",
 		"type": "string",
 		"description": "Settings, related to the visual part of the UI.",
@@ -50,14 +56,8 @@
 		"options": [""]
 	},
 	{
-		"save": "notesPrior",
-		"name": "Notes Priority",
-		"type": "bool",
-		"description": "If checked, display incoming notes above Health Bar and other elements.",
-		"value": true
-	},
-	{
 		"save": "replaceHB",
+		"translation_key": "replaceHB",
 		"name": "Health Bar Gradient",
 		"type": "bool",
 		"description": "If checked, replaces the Health Bar sprite with the gradient version.",
@@ -65,6 +65,7 @@
 	},
 	{
 		"save": "replaceTB",
+		"translation_key": "replaceTB",
 		"name": "Time Bar Gradient",
 		"type": "bool",
 		"description": "If checked, replaces the Time Bar sprite with the gradient version.",
@@ -72,6 +73,7 @@
 	},
     {
 		"save": "coloredText",
+		"translation_key": "coloredText",
 		"name": "Colored Text",
 		"type": "bool",
 		"description": "If checked, most text elements in the HUD will be colorized.",
@@ -79,6 +81,7 @@
 	},
 	{
 		"save": "timebarIcons",
+		"translation_key": "timebarIcons",
 		"name": "Time Bar Icons",
 		"type": "bool",
 		"description": "If unchecked, hides all icons near the Time Bar.",
@@ -86,13 +89,15 @@
 	},
     {
 		"save": "comboReplace",
-		"name": "Replace Combo Pop-Outs",
+		"translation_key": "comboReplace",
+		"name": "Replace Combo Counter",
 		"type": "bool",
-		"description": "If checked, removes FNF's combo pop-outs and replaces them with the SaraHUD version.",
+		"description": "If checked, removes FNF's combo counter pop-outs and replaces them with the SaraHUD version.",
 		"value": false
 	},
 	{
 		"save": "laneUnderlay",
+		"translation_key": "laneUnderlay",
 		"name": "Lane Underlay:",
 		"type": "percent",
 		"description": "How transparent should the Lane Underlay be.",
@@ -108,6 +113,7 @@
 	},
     {
 		"save": "oppUnderlay",
+		"translation_key": "oppUnderlay",
 		"name": "Opponent Underlay",
 		"type": "bool",
 		"description": "If checked, adds Lane Underlay for the opponent.",
@@ -115,6 +121,7 @@
 	},
 	{
 		"save": "divider-3",
+		"translation_key": "divider-3",
 		"name": "> TECHNICAL <",
 		"type": "string",
 		"description": "Settings, related to the technical part of the UI and do not affect it's visuals in any way.",
@@ -124,6 +131,7 @@
 	},
 	{
 		"save": "outdateCheck",
+		"translation_key": "outdateCheck",
 		"name": "Check for Updates",
 		"type": "bool",
 		"description": "If unchecked, removes the Psych Engine version check.",
@@ -131,6 +139,7 @@
 	},
 	{
 		"save": "rasmasa",
+		"translation_key": "rasmasa",
 		"name": "<3",
 		"type": "string",
 		"description": "If you try to please audiences, uncritically accepting their tastes, it can only mean that you have no respect for them. <Andrei Tarkovsky>",

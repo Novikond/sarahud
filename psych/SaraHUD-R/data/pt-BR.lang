@@ -1,0 +1,56 @@
+// rating pop-ups | pop-ups de classificação
+combo_shit: "Merda"
+combo_bad: "Ruim"
+combo_good: "Bom!"
+combo_sick: "Foda!!"
+
+// options | opções
+setting_divider-1: "> INFORMAÇÕES <"
+description_divider-1: "Configurações que afetam o que e como as estatísticas são exibidas."
+
+setting_statsType: "Tipo de Estatísticas:"
+description_statsType: "Selecione sua forma preferida de exibir as estatísticas de gameplay."
+
+setting_extraStats: "Estatísticas Extras"
+description_extraStats: "Mostra informações adicionais. (como doentes, bons, etc.)"
+
+setting_etternaBar: "Barra de Tempo Estilo Etterna"
+description_etternaBar: "Se marcado, o estilo das informações exibidas na Barra de Tempo será semelhante à Barra de Tempo do jogo Etterna."
+
+setting_ratings: "Classificações:"
+description_ratings: "Modifique o texto da classificação."
+
+setting_divider-2: "> VISUAIS <"
+description_divider-2: "Configurações relacionadas à parte visual da interface."
+
+setting_replaceHB: "Gradiente da Barra de Saúde"
+description_replaceHB: "Se marcado, substitui o sprite da Barra de Saúde pela versão gradiente."
+
+setting_replaceTB: "Gradiente da Barra de Tempo"
+description_replaceTB: "Se marcado, substitui o sprite da Barra de Tempo pela versão gradiente."
+
+setting_coloredText: "Texto Colorido"
+description_coloredText: "Se marcado, a maioria dos elementos de texto no HUD será colorida."
+
+setting_timebarIcons: "Ícones da Barra de Tempo"
+description_timebarIcons: "Se desmarcado, oculta todos os ícones próximos à Barra de Tempo."
+
+setting_comboReplace: "Substituir Contador de Combos"
+description_comboReplace: "Se marcado, remove os pop-ups do contador de combos do FNF e os substitui pela versão SaraHUD."
+
+setting_laneUnderlay: "Transparência da Faixa:"
+description_laneUnderlay: "Quão transparente deve ser a Faixa de Fundo."
+
+setting_oppUnderlay: "Faixa de Fundo do Oponente"
+description_oppUnderlay: "Se marcado, adiciona Faixa de Fundo para o oponente."
+
+setting_divider-3: "> TÉCNICO <"
+description_divider-3: "Configurações relacionadas à parte técnica da interface e que não afetam sua aparência de forma alguma."
+
+setting_outdateCheck: "Verificar Atualizações"
+description_outdateCheck: "Se desmarcado, remove a verificação da versão do Psych Engine."
+
+setting_rasmasa: "<3"
+description_rasmasa: "Se você tenta agradar o público, aceitando criticamente seus gostos, isso só pode significar que você não os respeita. <Andrei Tarkovsky>"
+
+// can't translate mod description sry | não consigo traduzir a descrição do mod sry

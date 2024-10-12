@@ -1,6 +1,6 @@
 {
 	"description": "|> [by Novikond]\nYou can change the preferences directly in this menu.\n\nIf you did not download it from the following links, consider scanning your device for viruses.\n• https://gamebanana.com/mods/371851\n• https://github.com/Novikond/sarahud",
-	"name": "SaraHUD-R",
+	"name": "SaraHUD",
 	"restart":false,
 	"runsGlobally": true,
 	"color": [220, 45, 100]

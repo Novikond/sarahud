@@ -15,35 +15,25 @@
 		"name": "Stats Type:",
 		"type": "string",
 		"description": "Select your prefered way to display the gameplay statistics.",
-		"value": "SaraHUD",
+		"value": "Vanilla",
 
-		"options": ["SaraHUD", "Psych-Like", "Vanilla"]
+		"options": ["Vanilla", "Alt"]
+	},
+	{
+		"save": "timeMod",
+		"translation_key": "timeMod",
+		"name": "Time Bar Mod",
+		"type": "bool",
+		"description": "If checked, alters the appearance of the Time Bar.",
+		"value": true
 	},
     {
 		"save": "extraStats",
 		"translation_key": "extraStats",
 		"name": "Extra Stats",
 		"type": "bool",
-		"description": "Shows additional information. (such as sicks, goods, etc.)",
+		"description": "If checked, shows additional information. (such as sicks, goods, etc.)",
 		"value": false
-	},
-	{
-		"save": "etternaBar",
-		"translation_key": "etternaBar",
-		"name": "Etterna-Styled Time Bar",
-		"type": "bool",
-		"description": "If checked, the style of information displayed on the Time Bar will be similar to the Time Bar from the game Etterna.",
-		"value": true
-	},
-	{
-		"save": "ratings",
-		"translation_key": "ratings",
-		"name": "Ratings:",
-		"type": "string",
-		"description": "Modify the rating text.",
-		"value": "FC",
-
-		"options": ["FC", "Name", "None"]
 	},
 	{
 		"save": "divider-2",
@@ -72,28 +62,12 @@
 		"value": true
 	},
     {
-		"save": "coloredText",
-		"translation_key": "coloredText",
-		"name": "Colored Text",
-		"type": "bool",
-		"description": "If checked, most text elements in the HUD will be colorized.",
-		"value": true
-	},
-	{
-		"save": "timebarIcons",
-		"translation_key": "timebarIcons",
-		"name": "Time Bar Icons",
-		"type": "bool",
-		"description": "If unchecked, hides all icons near the Time Bar.",
-		"value": true
-	},
-    {
 		"save": "comboReplace",
 		"translation_key": "comboReplace",
 		"name": "Replace Combo Counter",
 		"type": "bool",
 		"description": "If checked, removes FNF's combo counter pop-outs and replaces them with the SaraHUD version.",
-		"value": false
+		"value": true
 	},
 	{
 		"save": "laneUnderlay",
@@ -128,14 +102,6 @@
 		"value": "",
 
 		"options": [""]
-	},
-	{
-		"save": "outdateCheck",
-		"translation_key": "outdateCheck",
-		"name": "Check for Updates",
-		"type": "bool",
-		"description": "If unchecked, removes the Psych Engine version check.",
-		"value": true
 	},
 	{
 		"save": "rasmasa",

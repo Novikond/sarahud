@@ -1,18 +1,17 @@
--- > SaraHUD:R < -- [by Novikond]
+-- > SaraHUD < -- [by Novikond]
 
 -------- DEBUG --------
 local noOptionsMenu = false -- if [true], uses the old fashioned way to manage preferences
 local pref = {
     -- disaplayed info
-    statsType = 'SaraHUD',
+    statsType = 'Vanilla',
     extraStats = false,
-    etternaBar = true,
+    timeMod = true,
     ratings = 'FC',
 
     -- visuals
     replaceHB = true,
     replaceTB = true,
-    timebarIcons = true,
     comboReplace = false,
     coloredText = true,
 
@@ -25,26 +24,15 @@ local pref = {
 
 -------- VARS --------
 
--- we actually have fixed all the bugs when ai deletes files on your pc... we isolated her ai model in this update
 local uit -- prev. known as "saraTools"
 
-local textColors = { -- should i store this in different file or something
-	{'ratingText', 'ffd2d6'},
-	{'scoreText', 'ceedff'},
-	{'missesText', 'f7d5ff'},
-	
-	{'sickText', 'dfffd6'},
-	{'goodText', 'd8ffff'},
-	{'badText', 'ffe0cf'},
-	{'noText', 'ffd0da'}
-}
+local textColors
 
-local comboThings = {'comboText', 'comboTextFB', 'comboRatingText', 'comboRatingTextFB'}
+local comboThings = {'comboText', 'comboTextFB', 'comboRatingText'}
 local bg = {'infoBgLeft', 'infoBg', 'infoBgRight'}
 local extrSim = {'sick', 'good', 'bad', 'no'}
 local extrFul = {'combo', 'tnh'}
 
-local bruh = false -- dumbass check
 local statsWidth = 20
 local ratingthing = '%'
 
@@ -57,26 +45,37 @@ local nos = 0
 -------- PSYCH FUNCTIONS, PREFERENCES --------
 
 function onCreate()
-	if version <= '0.7.2' and getModSetting('outdateCheck', 'SaraHUD-R') then
-		setVar('shud_outdated', true)
-		bruh = true
-	end
-	if not checkFileExists(getTextFromFile('libs_location.txt') .. 'uit.lua') then
-		setVar('shud_noLibs', true)
-		bruh = true
-	else
-		uit = require('mods/' .. getTextFromFile('libs_location.txt') .. 'uit')
-	end
-	if bruh then -- i really hope it will help people.
-		addLuaScript('other_scripts/error.lua')
-	end
+    if version <= "0.7.3" then modFolder = 'SaraHUD' end -- poor 0.7 users
+    uit = require(getTextFromFile('lib_path.txt') .. 'uit')
+    textColors = uit.util.tomlParse(getTextFromFile(modFolder .. '/data/text_colors.toml'))
 end
 
 function onCreatePost()
     setProperty('scoreTxt.visible', false)
 
+    setTextSize('timeTxt', 22)
+    setTextFont('timeTxt', 'PhantomMuff.ttf')
+    setProperty('timeTxt.antialiasing', true)
+    setProperty('timeTxt.y', getProperty('timeBar.y') - 4)
+
     if not hideHud then
-        if getPref('statsType') == 'SaraHUD' then
+        if getPref('statsType') == 'Vanilla' then
+            uit.graphics.obj('infoBg',  (screenWidth / 2) + 15, getProperty('healthBar.y') + 30, 200, 40)
+            uit.graphics.img('infoBgLeft', 'GUI/round-vanilla', getProperty('infoBg.x') - 10, getProperty('infoBg.y'))
+            uit.graphics.img('infoBgRight', 'GUI/fade-vanilla', getProperty('infoBg.x') + getProperty('infoBg.width'), getProperty('infoBg.y'))
+            setProperty('infoBgRight.flipX', true)
+
+            for i = 1, #bg do
+                setProperty(bg[i] .. '.alpha', .16)
+            end
+
+            uit.graphics.img('missesIcon', 'saraHUD/missesIcon', (screenWidth / 2) + 20, getProperty('healthBar.y') + 34, .54)
+            uit.graphics.text('missesText', '0', getProperty('missesIcon.x') + 38, getProperty('missesIcon.y') + 6, 0)
+
+            uit.graphics.img('scoreIcon', 'saraHUD/scoreIcon', (screenWidth / 2) + 100, getProperty('healthBar.y') + 34, .54)
+            uit.graphics.text('scoreText', '0', getProperty('scoreIcon.x') + 38, getProperty('scoreIcon.y') + 6, 0)
+
+        elseif getPref('statsType') == 'Alt' then
             uit.graphics.obj('infoBg', 30, downscroll and 25 or screenHeight - 121, 180, 100)
             uit.graphics.img('infoBgLeft', 'GUI/fade-shud', getProperty('infoBg.x') - 30, getProperty('infoBg.y'))
             uit.graphics.img('infoBgRight', 'GUI/round-shud', getProperty('infoBg.x') + getProperty('infoBg.width'), getProperty('infoBg.y'))
@@ -84,8 +83,7 @@ function onCreatePost()
             setProperty('infoBgRight.flipX', true)
 
             for i = 1, #bg do
-                setProperty(bg[i] .. '.antialiasing', false)
-                setProperty(bg[i] .. '.alpha', .26)
+                setProperty(bg[i] .. '.alpha', .16)
             end
 
             uit.graphics.img('ratingIcon', 'saraHUD/ratingIcon', 15, downscroll and 16 or screenHeight - 50, .62)
@@ -95,41 +93,38 @@ function onCreatePost()
             uit.graphics.text('ratingText', '?', getProperty('ratingIcon.x') + 50, getProperty('ratingIcon.y') + 9)
             uit.graphics.text('scoreText', '0', getProperty('scoreIcon.x') + 50, getProperty('scoreIcon.y') + 9)
             uit.graphics.text('missesText', '0', getProperty('missesIcon.x') + 50, getProperty('missesIcon.y') + 9)
-            
-        elseif getPref('statsType') == 'Psych-Like' then
-            uit.graphics.obj('infoBg', 0, getProperty('healthBar.y') + 30, 600, 40)
-            screenCenter('infoBg', 'x')
+        end
+    end
 
-            uit.graphics.img('infoBgLeft', 'GUI/fade-vanilla', getProperty('infoBg.x') - 16, getProperty('infoBg.y'))
-            uit.graphics.img('infoBgRight', 'GUI/fade-vanilla', getProperty('infoBg.x') + getProperty('infoBg.width'), getProperty('infoBg.y'))
-            setProperty('infoBgRight.flipX', true)
+    if getPref('replaceHB') then
+		loadGraphic('healthBar.bg', 'bars/healthBar_grad')
+	end
 
-            for i = 1, #bg do
-                setProperty(bg[i] .. '.antialiasing', false)
-                setProperty(bg[i] .. '.alpha', .26)
-            end
+	if getPref('replaceTB') then
+		loadGraphic('timeBar.bg', 'bars/timeBar_grad')
+	end
 
-            uit.graphics.img('scoreIcon', 'saraHUD/scoreIcon', (screenWidth / 2) - 295, getProperty('healthBar.y') + 34, .54)
-            uit.graphics.img('missesIcon', 'saraHUD/missesIcon', getProperty('scoreIcon.x') + 200, getProperty('healthBar.y') + 34, .54)
-            uit.graphics.img('ratingIcon', 'saraHUD/ratingIcon', getProperty('missesIcon.x') + 160, getProperty('healthBar.y') + 34, .54)
+    if getPref('timeMod') then
+        if getPref('replaceTB') then 
+            loadGraphic('timeBar.bg', 'bars/timeBar_mod_grad')
+        else
+            loadGraphic('timeBar.bg', 'bars/timeBar_mod')
+        end
 
-            uit.graphics.text('scoreText', '0', getProperty('scoreIcon.x') + 38, getProperty('scoreIcon.y') + 6, 0)
-            uit.graphics.text('missesText', '0', getProperty('missesIcon.x') + 38, getProperty('missesIcon.y') + 6, 0)
-            uit.graphics.text('ratingText', '?', getProperty('ratingIcon.x') + 38, getProperty('ratingIcon.y') + 6, 0)
+        loadGraphic('timeBar.leftBar', 'bars/timeBar_fill_mod')
+        loadGraphic('timeBar.rightBar', 'bars/timeBar_fill_mod')
+        setProperty('timeBar.barWidth', getProperty('timeBar.width'))
 
-        elseif getPref('statsType') == 'Vanilla' then
-            uit.graphics.obj('infoBg',  (screenWidth / 2) + 100, getProperty('healthBar.y') + 30, 140, 40)
-            uit.graphics.img('infoBgLeft', 'GUI/fade-vanilla', getProperty('infoBg.x') - 16, getProperty('infoBg.y'))
-            uit.graphics.img('infoBgRight', 'GUI/fade-vanilla', getProperty('infoBg.x') + getProperty('infoBg.width'), getProperty('infoBg.y'))
-            setProperty('infoBgRight.flipX', true)
+        screenCenter('timeBar', 'x')
+        setProperty('timeBar.y', middlescroll and (downscroll and screenHeight - 22 or 25) or (downscroll and screenHeight - 60 or 50))
 
-            for i = 1, #bg do
-                setProperty(bg[i] .. '.antialiasing', false)
-                setProperty(bg[i] .. '.alpha', .26)
-            end
+        setTextSize('timeTxt', 18)
+        setTextAlignment('timeTxt', 'right')
 
-            uit.graphics.img('scoreIcon', 'saraHUD/scoreIcon', (screenWidth / 2) + 110, getProperty('healthBar.y') + 34, .54)
-            uit.graphics.text('scoreText', '0', getProperty('scoreIcon.x') + 38, getProperty('scoreIcon.y') + 6, 0)
+        uit.graphics.text('fcTxt', '[N/A]', getProperty('timeBar.x'), getProperty('timeBar.y') - 18, 400)
+
+        if timeBarType == 'Song Name' then
+            setTextString('timeTxt', shortenText(getTextString('timeTxt'), 6))
         end
     end
 
@@ -147,63 +142,29 @@ function onCreatePost()
         for i = 1, #extrSim do setProperty(extrSim[i] .. 'Text.alpha', 0.6) end
     end
 
-    if getPref('etternaBar') and timeBarType ~= 'Disabled' then
-        setProperty('timeTxt.visible', false)
-
-        uit.graphics.text('songText', songName, 0, getProperty('timeBar.y'), 400, 'center')
-        uit.graphics.text('timeText', '0:00', getProperty('timeBar.x') + getProperty('timeBar.width') - 82, getProperty('timeBar.y'), 80, 'right')
-        screenCenter('songText', 'x')
-
-        setTextSize('songText', 16)
-        setTextSize('timeText', 16)
-
-		if getPref('timebarIcons') then
-            uit.graphics.img('songIcon', 'saraHUD/songIcon', getProperty('timeBar.x') - 30, getProperty('timeBar.y') - 2, .4)
-            uit.graphics.img('timeIcon', 'saraHUD/timerIcon', getProperty('timeBar.x') + getProperty('timeBar.width') + 5, getProperty('timeBar.y') - 2, .4)
-		end
-
-    elseif not getPref('etternaBar') and timeBarType ~= 'Disabled' then
-        setTextSize('timeTxt', 18) 
-        setTextFont('timeTxt', 'PhantomMuff.ttf')
-        setProperty('timeTxt.antialiasing', true)
-        setProperty('timeTxt.y', getProperty('timeBar.y'))
-    end
-
     if getPref('comboReplace') then
         setProperty('showComboNum', false)
         setProperty('showCombo', false)
         setProperty('showRating', false)
 
         uit.graphics.text('comboText', 'x5', getProperty('healthBar.x') + getProperty('healthBar.width') - 300, getProperty('healthBar.y') - 40, 300, 'right')
-        setTextFont('comboText', 'Dimentia-Med.ttf')
+        setTextFont('comboText', 'Newgrounds.otf')
         setTextBorder('comboText', 3, '000000')
         setTextSize('comboText', 40)
 
         uit.graphics.text('comboTextFB', 'x5', getProperty('comboText.x') - 15, getProperty('comboText.y'), 300, 'right') -- FB stands for feedback
-        setTextFont('comboTextFB', 'Dimentia-Med.ttf')
+        setTextFont('comboTextFB', 'Newgrounds.otf')
         setTextSize('comboTextFB', 40)
 
-        uit.graphics.text('comboRatingText', 'Sick!!', getProperty('healthBar.x'), getProperty('healthBar.y') - 70, 300)
-        setTextFont('comboRatingText', 'Dimentia-Med.ttf')
+        uit.graphics.text('comboRatingText', 'Sick!!', screenWidth / 2 - 150, middlescroll and (downscroll and screenHeight - 210 or 180) or (downscroll and screenHeight - 150 or 85), 300, 'center')
+        setTextFont('comboRatingText', 'Newgrounds.otf')
         setTextBorder('comboRatingText', 3, '000000')
         setTextSize('comboRatingText', 40)
-
-        uit.graphics.text('comboRatingTextFB', 'Sick!!', getProperty('comboRatingText.x') + 15, getProperty('comboRatingText.y'), 300) -- FB stands for feedback
-        setTextFont('comboRatingTextFB', 'Dimentia-Med.ttf')
-        setTextSize('comboRatingTextFB', 40)
 
         for i = 1, #comboThings do
             setProperty(comboThings[i] .. '.alpha', 0)
         end
     end
-
-    if getPref('replaceHB') then
-		loadGraphic('healthBar.bg', 'GUI/healthBar')
-	end
-
-	if getPref('replaceTB') then
-		loadGraphic('timeBar.bg', 'GUI/timeBar')
-	end
 
     if getPref('laneUnderlay') > 0 then
 		for i = 0, 3 do
@@ -219,30 +180,15 @@ function onCreatePost()
 		end
 	end
 
-    if getPref('coloredText') then -- it's safer to run this function here
-		for i = 1, #textColors do
-			setTextColor(textColors[i][1], textColors[i][2])
-		end
+    for key, value in pairs(textColors) do
+        setTextColor(key, value)
     end
 end
 
 function onUpdatePost()
-    if getPref('etternaBar') and timeBarType ~= 'Disabled' then
-        setProperty('songText.y', getProperty('timeBar.y'))
-        setProperty('timeText.y', getProperty('timeBar.y'))
-
-        setProperty('songIcon.y', getProperty('timeBar.y') - 2)
-        setProperty('timeIcon.y', getProperty('timeBar.y') - 2)
-
-        setProperty('songText.alpha', getProperty('timeBar.alpha'))
-        setProperty('timeText.alpha', getProperty('timeBar.alpha'))
-        setProperty('songIcon.alpha', getProperty('timeBar.alpha'))
-        setProperty('timeIcon.alpha', getProperty('timeBar.alpha'))
-
-        setProperty('songText.visible', getProperty('timeBar.visible'))
-        setProperty('timeText.visible', getProperty('timeBar.visible'))
-        setProperty('songIcon.visible', getProperty('timeBar.visible'))
-        setProperty('timeIcon.visible', getProperty('timeBar.visible'))
+    if getPref('timeMod') and timeBarType ~= 'Disabled' then
+        uit.util.oto('timeTxt', 'timeBar', {x = getProperty('timeBar.width') - 400, y = -18, alpha = true})
+        uit.util.oto('fcTxt', 'timeBar', {x = 0, y = -18, alpha = true})
     end
 
     if getPref('laneUnderlay') > 0 then
@@ -278,23 +224,14 @@ function noteMiss()
     end
 end
 
-function onSongStart()
-    if getPref('etternaBar') then
-        setTextString('timeText', uit.util.formatTime(songLength))
-    end
-end
-
 -------- BRAIN --------
 
-function whatRating()
-	if getModSetting('ratings', 'SaraHUD-R') == 'FC' then
-		ratingthing = '% [' .. getProperty('ratingFC') .. ']'
-	elseif getModSetting('ratings', 'SaraHUD-R') == 'Name' then
-		ratingthing = '% [' .. getProperty('ratingName') .. ']'
-	else
-		ratingthing = '%'
-	end
-	return ratingthing
+function niceFcBro()
+    local yip = ''
+    if not getPref('timeMod') then
+        yip = ' [' .. getProperty('ratingFC') .. ']'
+    end
+    return yip
 end
 
 function updateCombo()
@@ -307,22 +244,18 @@ function updateCombo()
     uit.effect.alpha('comboTextFB', .5, 0, .2, {ease = 'easeInOut'})
     uit.effect.bop('comboTextFB', 1.2, 1.2, .3, {ease = 'easeOut'})
 
+    uit.effect.move('comboRatingText', screenWidth / 2 - 150, middlescroll and (downscroll and screenHeight - 210 or 180) or (downscroll and screenHeight - 150 or 85), 0, 5, .1, {ease = 'easeIn'})
     uit.effect.alpha('comboRatingText', 1, 0, .8, {ease = 'easeOut', startDelay = 1.2})
-    uit.effect.alpha('comboRatingTextFB', .5, 0, .2, {ease = 'easeInOut'})
-    uit.effect.bop('comboRatingTextFB', 1.2, 1.2, .3, {ease = 'easeOut'})
+
 
     if judgement == 'sick' then
         setTextString('comboRatingText', translate('combo_sick', 'Sick!!'))
-        setTextString('comboRatingTextFB', translate('combo_sick', 'Sick!!'))
     elseif judgement == 'good' then
         setTextString('comboRatingText', translate('combo_good', 'Good!'))
-        setTextString('comboRatingTextFB', translate('combo_good', 'Good!'))
     elseif judgement == 'bad' then
         setTextString('comboRatingText', translate('combo_bad', 'Bad'))
-        setTextString('comboRatingTextFB', translate('combo_bad', 'Bad'))
     elseif judgement == 'shit' then
         setTextString('comboRatingText', translate('combo_shit', 'Shit'))
-        setTextString('comboRatingTextFB', translate('combo_shit', 'Shit'))
     end
 end
 
@@ -355,11 +288,11 @@ end
 
 function updateHud()
     if getPref('statsType') ~= 'Vanilla' then
-        setTextString('ratingText', uit.util.floorDecimal(rating * 100, 2) .. whatRating())
-        setTextString('missesText', misses)
+        setTextString('ratingText', uit.util.floorDecimal(rating * 100, 2) .. '%' .. niceFcBro())
     end
-
+    setTextString('missesText', misses)
     setTextString('scoreText', commas(score))
+    setTextString('fcTxt', '[' .. getProperty('ratingFC') .. ']')
 end
 
 function commas(number)
@@ -374,18 +307,18 @@ function commas(number)
     return formatted
 end
 
-function translate(translation_key, text) -- for fellow 0.7.2 users
-    output = text
-    if version >= '1.0' then
-        output = getTranslationPhrase(translation_key, text)
+function shortenText(text, maxLength)
+    if #text > maxLength then
+        return string.sub(text, 1, maxLength - 1) .. "..."
+    else
+        return text
     end
-    return output
 end
 
 function getPref(tag)
     local output = ''
     if not noOptionsMenu then
-        output = getModSetting(tag, 'SaraHUD-R')
+        output = getModSetting(tag, 'SaraHUD')
     else
         output = pref[tag]
     end

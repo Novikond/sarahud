@@ -1,0 +1,3 @@
+[submodule "uit"]
+	path = uit
+	url = https://github.com/Novikond/uit

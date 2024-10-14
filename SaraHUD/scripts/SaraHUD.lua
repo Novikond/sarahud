@@ -234,65 +234,12 @@ function niceFcBro()
     return yip
 end
 
-function updateCombo()
-    judgement = getPropertyFromGroup('notes', sid, 'rating')
-
-    setTextString('comboText', 'x' .. combo)
-    setTextString('comboTextFB', 'x' .. combo)
-
-    uit.effect.alpha('comboText', 1, 0, .8, {ease = 'easeOut', startDelay = 1.5})
-    uit.effect.alpha('comboTextFB', .5, 0, .2, {ease = 'easeInOut'})
-    uit.effect.bop('comboTextFB', 1.2, 1.2, .3, {ease = 'easeOut'})
-
-    uit.effect.move('comboRatingText', screenWidth / 2 - 150, middlescroll and (downscroll and screenHeight - 210 or 180) or (downscroll and screenHeight - 150 or 85), 0, 5, .1, {ease = 'easeIn'})
-    uit.effect.alpha('comboRatingText', 1, 0, .8, {ease = 'easeOut', startDelay = 1.2})
-
-
-    if judgement == 'sick' then
-        setTextString('comboRatingText', translate('combo_sick', 'Sick!!'))
-    elseif judgement == 'good' then
-        setTextString('comboRatingText', translate('combo_good', 'Good!'))
-    elseif judgement == 'bad' then
-        setTextString('comboRatingText', translate('combo_bad', 'Bad'))
-    elseif judgement == 'shit' then
-        setTextString('comboRatingText', translate('combo_shit', 'Shit'))
+function translate(translation_key, text) -- poor 0.7 users (part 2)
+    local output = text
+    if version >= '1.0' then
+        output = getTranslationPhrase(translation_key, text)
     end
-end
-
-function updateHudExtra()
-    judgement = getPropertyFromGroup('notes', sid, 'rating')
-
-    if judgement == 'sick' then
-        sicks = sicks + 1
-        uit.effect.alpha('sickIcon', .9, .5)
-        uit.effect.alpha('sickText', .9, .6)
-    elseif judgement == 'good' then
-        goods = goods + 1
-        uit.effect.alpha('goodIcon', .9, .5)
-        uit.effect.alpha('goodText', .9, .6)
-    elseif judgement == 'bad' then
-        bads = bads + 1
-        uit.effect.alpha('badIcon', .9, .5)
-        uit.effect.alpha('badText', .9, .6)
-    elseif judgement == 'shit' then
-        nos = nos + 1
-        uit.effect.alpha('noIcon', .9, .5)
-        uit.effect.alpha('noText', .9, .6)
-    end
-
-    setTextString('sickText', sicks)
-    setTextString('goodText', goods)
-    setTextString('badText', bads)
-    setTextString('noText', nos)
-end
-
-function updateHud()
-    if getPref('statsType') ~= 'Vanilla' then
-        setTextString('ratingText', uit.util.floorDecimal(rating * 100, 2) .. '%' .. niceFcBro())
-    end
-    setTextString('missesText', misses)
-    setTextString('scoreText', commas(score))
-    setTextString('fcTxt', '[' .. getProperty('ratingFC') .. ']')
+    return output
 end
 
 function commas(number)
@@ -323,4 +270,69 @@ function getPref(tag)
         output = pref[tag]
     end
     return output
+end
+
+function updateHud()
+    if getPref('statsType') ~= 'Vanilla' then -- alr i won't delete ratings
+        setTextString('ratingText', uit.util.floorDecimal(rating * 100, 2) .. '%' .. niceFcBro())
+    end
+    setTextString('missesText', misses)
+    setTextString('scoreText', commas(score))
+    setTextString('fcTxt', '[' .. getProperty('ratingFC') .. ']')
+end
+
+function updateCombo()
+    judgement = getPropertyFromGroup('notes', sid, 'rating')
+
+    setTextString('comboText', 'x' .. combo)
+    setTextString('comboTextFB', 'x' .. combo)
+
+    uit.effect.alpha('comboText', 1, 0, .8, {ease = 'easeOut', startDelay = 1.5})
+    uit.effect.alpha('comboTextFB', .5, 0, .2, {ease = 'easeInOut'})
+    uit.effect.bop('comboTextFB', 1.2, 1.2, .3, {ease = 'easeOut'})
+
+    uit.effect.move('comboRatingText', screenWidth / 2 - 150, middlescroll and (downscroll and screenHeight - 210 or 180) or (downscroll and screenHeight - 150 or 85), 0, 5, .1, {ease = 'easeIn'})
+    uit.effect.alpha('comboRatingText', 1, 0, .8, {ease = 'easeOut', startDelay = 1.2})
+
+
+    if judgement == 'sick' then
+        uit.effect.color('comboRatingText', 'cee8c8', nil, {ease = 'easeIn'})
+        setTextString('comboRatingText', translate('combo_sick', 'Sick!!'))
+    elseif judgement == 'good' then
+        uit.effect.color('comboRatingText', 'cae9e9', nil, {ease = 'easeIn'})
+        setTextString('comboRatingText', translate('combo_good', 'Good!'))
+    elseif judgement == 'bad' then
+        uit.effect.color('comboRatingText', 'e0cbc0', nil, {ease = 'easeIn'})
+        setTextString('comboRatingText', translate('combo_bad', 'Bad'))
+    elseif judgement == 'shit' then
+        uit.effect.color('comboRatingText', 'dfb8c0', nil, {ease = 'easeIn'})
+        setTextString('comboRatingText', translate('combo_shit', 'Shit'))
+    end
+end
+
+function updateHudExtra()
+    judgement = getPropertyFromGroup('notes', sid, 'rating')
+
+    if judgement == 'sick' then
+        sicks = sicks + 1
+        uit.effect.alpha('sickIcon', .9, .5)
+        uit.effect.alpha('sickText', .9, .6)
+    elseif judgement == 'good' then
+        goods = goods + 1
+        uit.effect.alpha('goodIcon', .9, .5)
+        uit.effect.alpha('goodText', .9, .6)
+    elseif judgement == 'bad' then
+        bads = bads + 1
+        uit.effect.alpha('badIcon', .9, .5)
+        uit.effect.alpha('badText', .9, .6)
+    elseif judgement == 'shit' then
+        nos = nos + 1
+        uit.effect.alpha('noIcon', .9, .5)
+        uit.effect.alpha('noText', .9, .6)
+    end
+
+    setTextString('sickText', sicks)
+    setTextString('goodText', goods)
+    setTextString('badText', bads)
+    setTextString('noText', nos)
 end

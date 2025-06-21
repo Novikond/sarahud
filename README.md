@@ -13,6 +13,6 @@ This repository serves as a place where different versions of the HUD (and its c
 
 ## Other
 
-If you want to use this HUD, please credit the author and link to [this page](https://github.com/Novikond/sarahud/releases) (or [gamebanana](https://gamebanana.com/mods/371851) one), you don't have to ask for permission.
+If you want to use this HUD, please credit the author and link to [this page](https://github.com/Novikond/sarahud) (or [gamebanana](https://gamebanana.com/mods/371851) one), you don't have to ask for permission.
 
 Thank you for using my HUD and helping me to make it as good as possible.

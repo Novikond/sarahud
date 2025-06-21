@@ -1,0 +1,15 @@
+{
+	"title":"SaraHUD",
+	"description":"> by novikond\n\nOfficial SaraHUD repo:\nhttps://github.com/Novikond/sarahud\n\n\nAdvised to place this mod on the top of the mod list.",
+	"homepage": "",
+	"contributors": [
+		{
+			"name": "Novikond",
+			"role": "Author"
+		}
+	],
+	"api_version": "1.5.1",
+	"mod_version": "2.0.0",
+	"uid": "sarahud",
+	"license": "CC BY-NC-SA 4.0"
+}

@@ -1,0 +1,29 @@
+{
+	"config":[
+		{
+			"name": "Score Type",
+			"type": "list",
+			"properties": {
+				"values": ["Left", "Center", "Right", "Vanilla"],
+				"defaultIndex": 0
+			}
+		},
+		{
+			"name": "Detailed Score",
+			"type": "list",
+			"properties": {
+				"values": ["Disabled", "Right", "Left"],
+				"defaultIndex": 0
+			}
+		},
+		{
+			"name": "Strumline Background",
+			"type": "float",
+			"properties": {
+				"defaultValue": 0,
+				"range": [0, 1],
+				"increment": 0.1
+			}
+		}
+	]
+}

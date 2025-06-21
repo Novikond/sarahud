@@ -1,0 +1,46 @@
+[
+    {
+        "save": "scoreType",
+        "translation_key": "scoreType",
+        "name": "Score Type:",
+        "type": "string",
+        "description": "Choose the way the score is showcased.",
+        "value": "Left",
+
+        "options": ["Left", "Center", "Right", "Vanilla"]
+    },
+    {
+		"save": "extraScore",
+		"translation_key": "extraScore",
+		"name": "Detailed Score:",
+		"type": "string",
+		"description": "Shows additional information (such as sicks, goods, etc).",
+		"value": "Disabled",
+
+        "options": ["Disabled", "Right", "Left"]
+	},
+    {
+		"save": "strumBG",
+		"translation_key": "strumBG",
+		"name": "Strumline Background:",
+		"type": "percent",
+		"description": "Give the strumline a semi-transparent background.",
+		"value": 0,
+        "format": "%v%",
+	
+		"min": 0,
+		"max": 1,
+		"step": 0.1,
+
+		"decimals": 1,
+		"scroll": 1
+	},
+    {
+        "save": "stylizedElements",
+        "translation_key": "stylizedElements",
+        "name": "Stylized Elements",
+        "type": "bool",
+        "description": "If checked, enables stylization (font/sprite changes) of default HUD elements. Uncheck only if experience visual bugs in certain songs.",
+        "value": true
+    }
+]

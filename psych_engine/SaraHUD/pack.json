@@ -1,0 +1,6 @@
+{
+	"description": "> by novikond\n\nOfficial SaraHUD repo:\nhttps://github.com/Novikond/sarahud\n\n\nAdvised to place this mod on the top of the mod list.",
+	"name": "SaraHUD",
+	"runsGlobally": true,
+	"color": [220, 45, 100]
+}

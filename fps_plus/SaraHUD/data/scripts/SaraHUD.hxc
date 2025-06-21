@@ -1,0 +1,210 @@
+import flixel.FlxSprite;
+import flixel.FlxG;
+import flixel.text.FlxText;
+import flixel.text.FlxTextBorderStyle;
+import flixel.util.FlxStringUtil;
+import flixel.math.FlxMath;
+import openfl.text.TextFormat;
+import flixel.group.FlxTypedSpriteGroup;
+import config.Config;
+
+class SaraHUD extends Script {
+    var scoreType = ModConfig.get("sarahud", "Score Type");
+    var extraScore = ModConfig.get("sarahud", "Detailed Score");
+    var strumBG = ModConfig.get("sarahud", "Strumline Background");
+
+    var clrWHITE = 0xFFFFFFFF;
+    var clrBLACK = 0xFF000000;
+
+    var hudTextGroup = new FlxTypedSpriteGroup();
+    var playerStrumBGGroup = new FlxTypedSpriteGroup();
+    var opponentStrumBGGroup = new FlxTypedSpriteGroup();
+    
+    override public function create() {
+        playstate.scoreTxt.destroy();
+
+        if (strumBG > 0) {
+            for (i in 0 ... 4) {
+                playerStrumBG = new FlxSprite(0, -100).makeGraphic(112, FlxG.height + 100, clrBLACK);
+                playerStrumBG.alpha = strumBG;
+
+                addToHud(playerStrumBGGroup);
+                playerStrumBGGroup.add(playerStrumBG);
+
+                if (!Config.centeredNotes) {
+                    opponentStrumBG = new FlxSprite(0, -100).makeGraphic(112, FlxG.height + 100, clrBLACK);
+                    opponentStrumBG.alpha = strumBG;
+
+                    addToHud(opponentStrumBGGroup);
+                    opponentStrumBGGroup.add(opponentStrumBG);
+                }
+            }
+        }
+
+        switch(scoreType) {
+            case "Left", "Right":
+                for (i in 0 ... 3) {
+                hudSprite = new FlxSprite(scoreType == "Left" ? 10 + (i * 5) : FlxG.width - 70 - (i * 5), Config.downscroll ? 10 + (i * 42) : FlxG.height - 150 + (i * 42));
+                switch(i) {
+                    case 0:
+                        hudSprite.loadGraphic(Paths.image("hudIcons/miss"));
+                    case 1:
+                        hudSprite.loadGraphic(Paths.image("hudIcons/score"));
+                    case 2:
+                        hudSprite.loadGraphic(Paths.image("hudIcons/rating"));
+                }
+                hudSprite.scale.set(.6, .6);
+                hudSprite.antialiasing = true;
+                addToHud(hudSprite);
+
+                box = new FlxSprite(scoreType == "Left" ? 70 + (i * 5) : FlxG.width - 170 - (i * 5), Config.downscroll ? 28 + (i * 42) : FlxG.height - 133 + (i * 42));
+                box.makeGraphic(100, 24, clrBLACK);
+                box.alpha = .3;
+                box.antialiasing = true;
+                addToHud(box);
+                }
+
+                hudText = new FlxText(scoreType == "Left" ? 75 : FlxG.width - 475, hudSprite.y - 65, 400, scoreType == "Left" ? "0\n\n 0\n\n  ?" : "0\n\n0 \n\n?  ", 20);
+                hudText.setFormat(Paths.font("PhantomMuff"), 18, clrWHITE, scoreType == "Left" ? "left" : "right", FlxTextBorderStyle.OUTLINE, clrBLACK);
+                hudText.antialiasing = true;
+                addToHud(hudText);
+
+            case "Center":
+                for (i in 0 ... 3) {
+                hudSprite = new FlxSprite((FlxG.width / 2 - 250) + (i * 165), playstate.healthBar.y + 20);
+                switch(i) {
+                    case 0:
+                        hudSprite.loadGraphic(Paths.image("hudIcons/miss"));
+                    case 1:
+                        hudSprite.loadGraphic(Paths.image("hudIcons/score"));
+                    case 2:
+                        hudSprite.loadGraphic(Paths.image("hudIcons/rating"));
+                }
+                hudSprite.scale.set(.6, .6);
+                hudSprite.antialiasing = true;
+                addToHud(hudSprite);
+
+                box = new FlxSprite((FlxG.width / 2 - 192) + (i * 165), playstate.healthBar.y + 37).makeGraphic(100, 24, clrBLACK);
+                box.alpha = .3;
+                box.antialiasing = true;
+                addToHud(box);
+
+                hudText = new FlxText((FlxG.width / 2 - 190) + (i * 165), box.y + 2, 0, "0", 20);
+                hudText.setFormat(Paths.font("PhantomMuff"), 18, clrWHITE, "left", FlxTextBorderStyle.OUTLINE, clrBLACK);
+                hudText.antialiasing = true;
+                addToHud(hudText);
+
+                addToHud(hudTextGroup);
+                hudTextGroup.add(hudText);
+                }
+
+            case "Vanilla":
+                hudSprite = new FlxSprite(FlxG.width / 2 + 100, playstate.healthBar.y + 20).loadGraphic(Paths.image("hudIcons/score"));
+                hudSprite.scale.set(.6, .6);
+                hudSprite.antialiasing = true;
+                addToHud(hudSprite);
+
+                box = new FlxSprite(FlxG.width / 2 + 157, playstate.healthBar.y + 37).makeGraphic(100, 24, clrBLACK);
+                box.alpha = .3;
+                box.antialiasing = true;
+                addToHud(box);
+
+                hudText = new FlxText(FlxG.width / 2 + 160, box.y + 2, 0, "0", 20);
+                hudText.setFormat(Paths.font("PhantomMuff"), 18, clrWHITE, "left", FlxTextBorderStyle.OUTLINE, clrBLACK);
+                hudText.antialiasing = true;
+                addToHud(hudText);
+        }
+
+        if (extraScore != "Disabled") {
+            boxExtra = new FlxSprite(extraScore == "Right" ? FlxG.width - 63 : 17, FlxG.height / 2 - 100).makeGraphic(45, 185, clrBLACK);
+            boxExtra.alpha = .2;
+            boxExtra.antialiasing = true;
+            addToHud(boxExtra);
+            
+            for (i in 0 ... 4) {
+                hudSpriteExtra = new FlxSprite(extraScore == "Right" ? FlxG.width - 70 : 10, FlxG.height / 2 - 100 + (i * 42));
+                switch(i) {
+                    case 0:
+                        hudSpriteExtra.loadGraphic(Paths.image("hudIcons/sick"));
+                    case 1:
+                        hudSpriteExtra.loadGraphic(Paths.image("hudIcons/good"));
+                    case 2:
+                        hudSpriteExtra.loadGraphic(Paths.image("hudIcons/bad"));
+                    case 3:
+                        hudSpriteExtra.loadGraphic(Paths.image("hudIcons/shit"));
+                }
+            hudSpriteExtra.scale.set(.6, .6);
+            hudSpriteExtra.alpha = .5;
+            hudSpriteExtra.antialiasing = true;
+            addToHud(hudSpriteExtra);
+            }
+
+            hudTextExtra = new FlxText(boxExtra.x - 77, FlxG.height / 2 - 80, 200, "0\n\n0\n\n0\n\n0", 20);
+            hudTextExtra.setFormat(Paths.font("PhantomMuff"), 18, clrWHITE, "center", FlxTextBorderStyle.OUTLINE, clrBLACK);
+            hudTextExtra.alpha = .9;
+            hudTextExtra.antialiasing = true;
+            addToHud(hudTextExtra);
+        }
+    }
+
+    override public function update() {
+        if (strumBG > 0) {
+        for (i in 0 ... 4) {
+            playerStrumBGGroup.members[i].x = playstate.playerStrums.members[i].x;
+
+            if (!Config.centeredNotes) {
+                opponentStrumBGGroup.members[i].x = playstate.enemyStrums.members[i].x;
+            }
+        }
+        }
+    }
+
+    override public function noteHit(character:Character) {
+        if(character.isPlayer) {
+            switch(scoreType) {
+            case "Left":
+                hudText.text = playstate.songStats.missCount + "\n\n " + FlxStringUtil.formatMoney(playstate.songStats.score, false) + "\n\n  " + truncateFloat(playstate.songStats.accuracy, 2) + "%";
+            
+            case "Right":
+                hudText.text = playstate.songStats.missCount + "\n\n" + FlxStringUtil.formatMoney(playstate.songStats.score, false) + " \n\n" + truncateFloat(playstate.songStats.accuracy, 2) + "%  ";
+
+            case "Center":
+                hudTextGroup.members[0].text = playstate.songStats.missCount;
+                hudTextGroup.members[1].text = FlxStringUtil.formatMoney(playstate.songStats.score, false);
+                hudTextGroup.members[2].text = truncateFloat(playstate.songStats.accuracy, 2) + "%";
+
+            case "Vanilla":
+                hudText.text = FlxStringUtil.formatMoney(playstate.songStats.score, false);
+            }
+
+            if (extraScore != "Disabled") {
+                hudTextExtra.text = playstate.songStats.sickCount + "\n\n" + playstate.songStats.goodCount + "\n\n" + playstate.songStats.badCount + "\n\n" + playstate.songStats.shitCount;
+            }
+        }
+    }
+
+    override public function noteMiss() {
+        switch(scoreType) {
+        case "Left":
+            hudText.text = playstate.songStats.missCount + "\n\n " + FlxStringUtil.formatMoney(playstate.songStats.score, false) + "\n\n  " + truncateFloat(playstate.songStats.accuracy, 2) + "%";
+        
+        case "Right":
+            hudText.text = playstate.songStats.missCount + "\n\n" + FlxStringUtil.formatMoney(playstate.songStats.score, false) + " \n\n" + truncateFloat(playstate.songStats.accuracy, 2) + "%  ";
+
+        case "Center":
+            hudTextGroup.members[0].text = playstate.songStats.missCount;
+            hudTextGroup.members[1].text = FlxStringUtil.formatMoney(playstate.songStats.score, false);
+            hudTextGroup.members[2].text = truncateFloat(playstate.songStats.accuracy, 2) + "%";
+
+        case "Vanilla":
+            hudText.text = FlxStringUtil.formatMoney(playstate.songStats.score, false);
+        }
+    }
+
+    function truncateFloat(number:Float, precision:Int):Float {
+		var num = number;
+		num = num * Math.pow(10, precision);
+		num = Math.round(num)/Math.pow(10, precision);
+		return num;
+	}
+}

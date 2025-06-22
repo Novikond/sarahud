@@ -13,6 +13,9 @@ function onCreatePost() {
     scoreTxt.destroy();
 
     hudTextGroup = new FlxTypedSpriteGroup();
+    hudSpriteGroup = new FlxTypedSpriteGroup();
+    boxGroup = new FlxTypedSpriteGroup();
+    hudSpriteExtraGroup = new FlxTypedSpriteGroup();
     playerStrumBGGroup = new FlxTypedSpriteGroup();
     opponentStrumBGGroup = new FlxTypedSpriteGroup();
 
@@ -51,12 +54,18 @@ function onCreatePost() {
             hudSprite.camera = game.camHUD;
             game.add(hudSprite);
 
+            hudSpriteGroup.camera = camHUD;
+            hudSpriteGroup.add(hudSprite);
+
             box = new FlxSprite(getModSetting("scoreType") == "Left" ? 70 + (i * 5) : FlxG.width - 170 - (i * 5), ClientPrefs.data.downScroll ? 28 + (i * 42) : FlxG.height - 133 + (i * 42));
             box.makeGraphic(100, 24, FlxColor.BLACK);
             box.alpha = .3;
             box.antialiasing = true;
             box.camera = game.camHUD;
             game.add(box);
+
+            boxGroup.camera = game.camHUD;
+            boxGroup.add(box);
             }
 
             hudText = new FlxText(getModSetting("scoreType") == "Left" ? 75 : FlxG.width - 475, hudSprite.y - 65, 400, getModSetting("scoreType") == "Left" ? "0\n\n 0\n\n  ?" : "0\n\n0 \n\n?  ", 20);
@@ -65,27 +74,33 @@ function onCreatePost() {
             hudText.camera = game.camHUD;
             game.add(hudText);
 
-        case "Center":
+        case "Center", "Vanilla":
             for (i in 0 ... 3) {
             hudSprite = new FlxSprite((FlxG.width / 2 - 250) + (i * 165), game.healthBar.y + 20);
             switch(i) {
                 case 0:
                     hudSprite.loadGraphic(Paths.image("hudIcons/miss"));
                 case 1:
-                    hudSprite.loadGraphic(Paths.image("hudIcons/score"));
-                case 2:
                     hudSprite.loadGraphic(Paths.image("hudIcons/rating"));
+                case 2:
+                    hudSprite.loadGraphic(Paths.image("hudIcons/score"));
             }
             hudSprite.scale.set(.6, .6);
             hudSprite.antialiasing = true;
             hudSprite.camera = game.camHUD;
             game.add(hudSprite);
 
+            hudSpriteGroup.camera = camHUD;
+            hudSpriteGroup.add(hudSprite);
+
             box = new FlxSprite((FlxG.width / 2 - 192) + (i * 165), game.healthBar.y + 37).makeGraphic(100, 24, FlxColor.BLACK);
             box.alpha = .3;
             box.antialiasing = true;
             box.camera = game.camHUD;
             game.add(box);
+
+            boxGroup.camera = camHUD;
+            boxGroup.add(box);
 
             hudText = new FlxText((FlxG.width / 2 - 190) + (i * 165), box.y + 2, 0, "0", 20);
             hudText.setFormat(Paths.font("PhantomMuff.ttf"), 18, FlxColor.WHITE, "left", FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -96,24 +111,15 @@ function onCreatePost() {
             hudTextGroup.add(hudText);
             }
 
-        case "Vanilla":
-            hudSprite = new FlxSprite(FlxG.width / 2 + 100, game.healthBar.y + 20).loadGraphic(Paths.image("hudIcons/score"));
-            hudSprite.scale.set(.6, .6);
-            hudSprite.antialiasing = true;
-            hudSprite.camera = game.camHUD;
-            game.add(hudSprite);
+            hudTextGroup.members[1].text = "?";
 
-            box = new FlxSprite(FlxG.width / 2 + 157, game.healthBar.y + 37).makeGraphic(100, 24, FlxColor.BLACK);
-            box.alpha = .3;
-            box.antialiasing = true;
-            box.camera = game.camHUD;
-            game.add(box);
-
-            hudText = new FlxText(FlxG.width / 2 + 160, box.y + 2, 0, "0", 20);
-            hudText.setFormat(Paths.font("PhantomMuff.ttf"), 18, FlxColor.WHITE, "left", FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-            hudText.antialiasing = true;
-            hudText.camera = camHUD;
-            game.add(hudText);
+            if (getModSetting("scoreType") == "Vanilla") {
+                for (i in 0 ... 2) {
+                    hudSpriteGroup.members[i].destroy();
+                    boxGroup.members[i].destroy();
+                    hudTextGroup.members[i].destroy();
+                }
+            }
     }
 
     if (getModSetting("extraScore") != "Disabled") {
@@ -180,8 +186,8 @@ function goodNoteHit() {
 
         case "Center":
             hudTextGroup.members[0].text = misses;
-            hudTextGroup.members[1].text = FlxStringUtil.formatMoney(score, false);
-            hudTextGroup.members[2].text = CoolUtil.floorDecimal(rating * 100, 2) + "%";
+            hudTextGroup.members[1].text = CoolUtil.floorDecimal(rating * 100, 2) + "%";
+            hudTextGroup.members[2].text = FlxStringUtil.formatMoney(score, false);
 
         case "Vanilla":
             hudText.text = FlxStringUtil.formatMoney(score, false);

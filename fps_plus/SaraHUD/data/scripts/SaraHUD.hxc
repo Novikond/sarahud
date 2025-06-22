@@ -13,10 +13,14 @@ class SaraHUD extends Script {
     var extraScore = ModConfig.get("sarahud", "Detailed Score");
     var strumBG = ModConfig.get("sarahud", "Strumline Background");
 
+    //yo pls allow for FlxColor :pray:
     var clrWHITE = 0xFFFFFFFF;
     var clrBLACK = 0xFF000000;
 
     var hudTextGroup = new FlxTypedSpriteGroup();
+    var hudSpriteGroup = new FlxTypedSpriteGroup();
+    var boxGroup = new FlxTypedSpriteGroup();
+    var hudSpriteExtraGroup = new FlxTypedSpriteGroup();
     var playerStrumBGGroup = new FlxTypedSpriteGroup();
     var opponentStrumBGGroup = new FlxTypedSpriteGroup();
     
@@ -57,37 +61,54 @@ class SaraHUD extends Script {
                 hudSprite.antialiasing = true;
                 addToHud(hudSprite);
 
+                addToHud(hudSpriteGroup);
+                hudSpriteGroup.add(hudSprite);
+                hudSprite.visible = false;
+
                 box = new FlxSprite(scoreType == "Left" ? 70 + (i * 5) : FlxG.width - 170 - (i * 5), Config.downscroll ? 28 + (i * 42) : FlxG.height - 133 + (i * 42));
                 box.makeGraphic(100, 24, clrBLACK);
                 box.alpha = .3;
                 box.antialiasing = true;
                 addToHud(box);
+
+                addToHud(boxGroup);
+                boxGroup.add(box);
+                box.visible = false;
                 }
 
                 hudText = new FlxText(scoreType == "Left" ? 75 : FlxG.width - 475, hudSprite.y - 65, 400, scoreType == "Left" ? "0\n\n 0\n\n  ?" : "0\n\n0 \n\n?  ", 20);
                 hudText.setFormat(Paths.font("PhantomMuff"), 18, clrWHITE, scoreType == "Left" ? "left" : "right", FlxTextBorderStyle.OUTLINE, clrBLACK);
                 hudText.antialiasing = true;
                 addToHud(hudText);
+                hudText.visible = false;
 
-            case "Center":
+            case "Center", "Vanilla":
                 for (i in 0 ... 3) {
                 hudSprite = new FlxSprite((FlxG.width / 2 - 250) + (i * 165), playstate.healthBar.y + 20);
                 switch(i) {
                     case 0:
                         hudSprite.loadGraphic(Paths.image("hudIcons/miss"));
                     case 1:
-                        hudSprite.loadGraphic(Paths.image("hudIcons/score"));
-                    case 2:
                         hudSprite.loadGraphic(Paths.image("hudIcons/rating"));
+                    case 2:
+                        hudSprite.loadGraphic(Paths.image("hudIcons/score"));
                 }
                 hudSprite.scale.set(.6, .6);
                 hudSprite.antialiasing = true;
                 addToHud(hudSprite);
 
+                addToHud(hudSpriteGroup);
+                hudSpriteGroup.add(hudSprite);
+                hudSprite.visible = false;
+
                 box = new FlxSprite((FlxG.width / 2 - 192) + (i * 165), playstate.healthBar.y + 37).makeGraphic(100, 24, clrBLACK);
                 box.alpha = .3;
                 box.antialiasing = true;
                 addToHud(box);
+
+                addToHud(boxGroup);
+                boxGroup.add(box);
+                box.visible = false;
 
                 hudText = new FlxText((FlxG.width / 2 - 190) + (i * 165), box.y + 2, 0, "0", 20);
                 hudText.setFormat(Paths.font("PhantomMuff"), 18, clrWHITE, "left", FlxTextBorderStyle.OUTLINE, clrBLACK);
@@ -96,23 +117,15 @@ class SaraHUD extends Script {
 
                 addToHud(hudTextGroup);
                 hudTextGroup.add(hudText);
+                hudText.visible = false;
                 }
-
-            case "Vanilla":
-                hudSprite = new FlxSprite(FlxG.width / 2 + 100, playstate.healthBar.y + 20).loadGraphic(Paths.image("hudIcons/score"));
-                hudSprite.scale.set(.6, .6);
-                hudSprite.antialiasing = true;
-                addToHud(hudSprite);
-
-                box = new FlxSprite(FlxG.width / 2 + 157, playstate.healthBar.y + 37).makeGraphic(100, 24, clrBLACK);
-                box.alpha = .3;
-                box.antialiasing = true;
-                addToHud(box);
-
-                hudText = new FlxText(FlxG.width / 2 + 160, box.y + 2, 0, "0", 20);
-                hudText.setFormat(Paths.font("PhantomMuff"), 18, clrWHITE, "left", FlxTextBorderStyle.OUTLINE, clrBLACK);
-                hudText.antialiasing = true;
-                addToHud(hudText);
+                if (scoreType == "Vanilla") {
+                    for (i in 0 ... 2) {
+                        hudSpriteGroup.members[i].destroy();
+                        boxGroup.members[i].destroy();
+                        hudTextGroup.members[i].destroy();
+                    }
+                }
         }
 
         if (extraScore != "Disabled") {
@@ -120,6 +133,7 @@ class SaraHUD extends Script {
             boxExtra.alpha = .2;
             boxExtra.antialiasing = true;
             addToHud(boxExtra);
+            boxExtra.visible = false;
             
             for (i in 0 ... 4) {
                 hudSpriteExtra = new FlxSprite(extraScore == "Right" ? FlxG.width - 70 : 10, FlxG.height / 2 - 100 + (i * 42));
@@ -137,6 +151,10 @@ class SaraHUD extends Script {
             hudSpriteExtra.alpha = .5;
             hudSpriteExtra.antialiasing = true;
             addToHud(hudSpriteExtra);
+
+            addToHud(hudSpriteExtraGroup);
+            hudSpriteExtraGroup.add(hudSpriteExtra);
+            hudSpriteExtra.visible = false;
             }
 
             hudTextExtra = new FlxText(boxExtra.x - 77, FlxG.height / 2 - 80, 200, "0\n\n0\n\n0\n\n0", 20);
@@ -144,6 +162,7 @@ class SaraHUD extends Script {
             hudTextExtra.alpha = .9;
             hudTextExtra.antialiasing = true;
             addToHud(hudTextExtra);
+            hudTextExtra.visible = false;
         }
     }
 
@@ -170,8 +189,8 @@ class SaraHUD extends Script {
 
             case "Center":
                 hudTextGroup.members[0].text = playstate.songStats.missCount;
-                hudTextGroup.members[1].text = FlxStringUtil.formatMoney(playstate.songStats.score, false);
-                hudTextGroup.members[2].text = truncateFloat(playstate.songStats.accuracy, 2) + "%";
+                hudTextGroup.members[1].text = truncateFloat(playstate.songStats.accuracy, 2) + "%";
+                hudTextGroup.members[2].text = FlxStringUtil.formatMoney(playstate.songStats.score, false);
 
             case "Vanilla":
                 hudText.text = FlxStringUtil.formatMoney(playstate.songStats.score, false);
@@ -193,11 +212,66 @@ class SaraHUD extends Script {
 
         case "Center":
             hudTextGroup.members[0].text = playstate.songStats.missCount;
-            hudTextGroup.members[1].text = FlxStringUtil.formatMoney(playstate.songStats.score, false);
-            hudTextGroup.members[2].text = truncateFloat(playstate.songStats.accuracy, 2) + "%";
+            hudTextGroup.members[1].text = truncateFloat(playstate.songStats.accuracy, 2) + "%";
+            hudTextGroup.members[2].text = FlxStringUtil.formatMoney(playstate.songStats.score, false);
 
         case "Vanilla":
             hudText.text = FlxStringUtil.formatMoney(playstate.songStats.score, false);
+        }
+    }
+
+    override public function countdownBeat(curBeat:Int){
+        if (curBeat == -1) {
+            switch(scoreType) {
+                case "Left", "Right":
+                    hudText.visible = true;
+
+                    for (i in 0 ... 3) {
+                        hudSpriteGroup.members[i].visible = true;
+                        boxGroup.members[i].visible = true;
+                    }
+
+                case "Center", "Vanilla":
+                    for (i in 0 ... 3) {
+                        hudSpriteGroup.members[i].visible = true;
+                        boxGroup.members[i].visible = true;
+                        hudTextGroup.members[i].visible = true;
+                    }
+
+            }
+
+            if (extraScore != "Disabled") {
+                boxExtra.visible = true;
+                hudTextExtra.visible = true;
+
+                for (i in 0 ... 4) { hudSpriteExtraGroup.members[i].visible = true; }
+            }
+        }
+    }
+
+    override public function songStart(){
+        switch(scoreType) {
+            case "Left", "Right":
+                hudText.visible = true;
+
+                for (i in 0 ... 3) {
+                    hudSpriteGroup.members[i].visible = true;
+                    boxGroup.members[i].visible = true;
+                }
+
+            case "Center", "Vanilla":
+                for (i in 0 ... 3) {
+                    hudSpriteGroup.members[i].visible = true;
+                    boxGroup.members[i].visible = true;
+                    hudTextGroup.members[i].visible = true;
+                }
+        }
+
+        if (extraScore != "Disabled") {
+            boxExtra.visible = true;
+            hudTextExtra.visible = true;
+
+            for (i in 0 ... 4) { hudSpriteExtraGroup.members[i].visible = true; }
         }
     }
 

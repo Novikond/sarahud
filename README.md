@@ -20,7 +20,7 @@ This repository serves as a place where different versions of the HUD (and its c
 **A:** No, you may not repload my HUD to the other site. Unless, it's a heavily edited version of my HUD, just give proper credits if you gonna use a huge chunk of my code, please.
 
 **Q:** SaraHUD doesn't work, what do? <br>
-**A:** First, make sure you followed the installation guide. Second, make sure you didn't edit any files, including names. Also, make sure you use the latest version of your engine. As for Legacy versions, they are out of support and may not work on the latest versions of said engines, sorry.
+**A:** First, make sure you followed the installation guide. Second, make sure you didn't edit any files, including path names. Also, make sure you use the latest version of your engine. As for Legacy versions, they are out of support and may not work on the latest versions of said engines, sorry.
 
 ---
 Thank you for using my HUD and helping me to make it as good as possible.

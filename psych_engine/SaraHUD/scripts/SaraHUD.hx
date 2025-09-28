@@ -9,6 +9,7 @@ import flixel.math.FlxMath;
 import openfl.text.TextFormat;
 import flixel.group.FlxTypedSpriteGroup;
 
+// for my fellow p-slice users, it probably shows you oncreate error i have NO CLUE what that is, it doesn't affect the script at all it just does that i guess
 function onCreatePost() {
     scoreTxt.destroy();
 
@@ -59,7 +60,7 @@ function onCreatePost() {
 
             box = new FlxSprite(getModSetting("scoreType") == "Left" ? 70 + (i * 5) : FlxG.width - 170 - (i * 5), ClientPrefs.data.downScroll ? 28 + (i * 42) : FlxG.height - 133 + (i * 42));
             box.makeGraphic(100, 24, FlxColor.BLACK);
-            box.alpha = .3;
+            box.alpha = getModSetting("scoreBG");
             box.antialiasing = true;
             box.camera = game.camHUD;
             game.add(box);
@@ -94,7 +95,7 @@ function onCreatePost() {
             hudSpriteGroup.add(hudSprite);
 
             box = new FlxSprite((FlxG.width / 2 - 192) + (i * 165), game.healthBar.y + 37).makeGraphic(100, 24, FlxColor.BLACK);
-            box.alpha = .3;
+            box.alpha = getModSetting("scoreBG");
             box.antialiasing = true;
             box.camera = game.camHUD;
             game.add(box);
@@ -124,7 +125,7 @@ function onCreatePost() {
 
     if (getModSetting("extraScore") != "Disabled") {
         boxExtra = new FlxSprite(getModSetting("extraScore") == "Right" ? FlxG.width - 63 : 17, FlxG.height / 2 - 100).makeGraphic(45, 185, FlxColor.BLACK);
-        boxExtra.alpha = .2;
+        boxExtra.alpha = getModSetting("scoreBG");
         boxExtra.antialiasing = true;
         boxExtra.camera = game.camHUD;
         game.add(boxExtra);
@@ -142,7 +143,7 @@ function onCreatePost() {
                     hudSpriteExtra.loadGraphic(Paths.image("hudIcons/shit"));
             }
             hudSpriteExtra.scale.set(.6, .6);
-            hudSpriteExtra.alpha = .5;
+            hudSpriteExtra.alpha = .8;
             hudSpriteExtra.antialiasing = true;
             hudSpriteExtra.camera = game.camHUD;
             game.add(hudSpriteExtra);

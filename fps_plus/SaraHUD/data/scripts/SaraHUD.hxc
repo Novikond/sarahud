@@ -12,6 +12,7 @@ class SaraHUD extends Script {
     var scoreType = ModConfig.get("sarahud", "Score Type");
     var extraScore = ModConfig.get("sarahud", "Detailed Score");
     var strumBG = ModConfig.get("sarahud", "Strumline Background");
+    var scoreBG = ModConfig.get("sarahud", "Score Background");
 
     //yo pls allow for FlxColor :pray:
     var clrWHITE = 0xFFFFFFFF;
@@ -67,7 +68,7 @@ class SaraHUD extends Script {
 
                 box = new FlxSprite(scoreType == "Left" ? 70 + (i * 5) : FlxG.width - 170 - (i * 5), Config.downscroll ? 28 + (i * 42) : FlxG.height - 133 + (i * 42));
                 box.makeGraphic(100, 24, clrBLACK);
-                box.alpha = .3;
+                box.alpha = scoreBG;
                 box.antialiasing = true;
                 addToHud(box);
 
@@ -76,7 +77,7 @@ class SaraHUD extends Script {
                 box.visible = false;
                 }
 
-                hudText = new FlxText(scoreType == "Left" ? 75 : FlxG.width - 475, hudSprite.y - 65, 400, scoreType == "Left" ? "0\n\n 0\n\n  ?" : "0\n\n0 \n\n?  ", 20);
+                hudText = new FlxText(scoreType == "Left" ? 75 : FlxG.width - 475, hudSprite.y - 65, 400, scoreType == "Left" ? "0\n\n 0\n\n  0%" : "0\n\n0 \n\n0%  ", 20);
                 hudText.setFormat(Paths.font("PhantomMuff"), 18, clrWHITE, scoreType == "Left" ? "left" : "right", FlxTextBorderStyle.OUTLINE, clrBLACK);
                 hudText.antialiasing = true;
                 addToHud(hudText);
@@ -102,7 +103,7 @@ class SaraHUD extends Script {
                 hudSprite.visible = false;
 
                 box = new FlxSprite((FlxG.width / 2 - 192) + (i * 165), playstate.healthBar.y + 37).makeGraphic(100, 24, clrBLACK);
-                box.alpha = .3;
+                box.alpha = scoreBG;
                 box.antialiasing = true;
                 addToHud(box);
 
@@ -119,6 +120,8 @@ class SaraHUD extends Script {
                 hudTextGroup.add(hudText);
                 hudText.visible = false;
                 }
+                hudTextGroup.members[1].text = "0%";
+
                 if (scoreType == "Vanilla") {
                     for (i in 0 ... 2) {
                         hudSpriteGroup.members[i].destroy();
@@ -130,7 +133,7 @@ class SaraHUD extends Script {
 
         if (extraScore != "Disabled") {
             boxExtra = new FlxSprite(extraScore == "Right" ? FlxG.width - 63 : 17, FlxG.height / 2 - 100).makeGraphic(45, 185, clrBLACK);
-            boxExtra.alpha = .2;
+            boxExtra.alpha = scoreBG;
             boxExtra.antialiasing = true;
             addToHud(boxExtra);
             boxExtra.visible = false;
@@ -182,13 +185,13 @@ class SaraHUD extends Script {
         if(character.isPlayer) {
             switch(scoreType) {
             case "Left":
-                hudText.text = playstate.songStats.missCount + "\n\n " + FlxStringUtil.formatMoney(playstate.songStats.score, false) + "\n\n  " + truncateFloat(playstate.songStats.accuracy, 2) + "%";
+                hudText.text = (Config.showMisses == 0 || Config.showMisses == 1 ? playstate.songStats.missCount : playstate.songStats.comboBreakCount) + "\n\n " + FlxStringUtil.formatMoney(playstate.songStats.score, false) + "\n\n  " + truncateFloat(playstate.songStats.accuracy, 2) + "%";
             
             case "Right":
-                hudText.text = playstate.songStats.missCount + "\n\n" + FlxStringUtil.formatMoney(playstate.songStats.score, false) + " \n\n" + truncateFloat(playstate.songStats.accuracy, 2) + "%  ";
+                hudText.text = (Config.showMisses == 0 || Config.showMisses == 1 ? playstate.songStats.missCount : playstate.songStats.comboBreakCount) + "\n\n" + FlxStringUtil.formatMoney(playstate.songStats.score, false) + " \n\n" + truncateFloat(playstate.songStats.accuracy, 2) + "%  ";
 
             case "Center":
-                hudTextGroup.members[0].text = playstate.songStats.missCount;
+                hudTextGroup.members[0].text = (Config.showMisses == 0 || Config.showMisses == 1 ? playstate.songStats.missCount : playstate.songStats.comboBreakCount);
                 hudTextGroup.members[1].text = truncateFloat(playstate.songStats.accuracy, 2) + "%";
                 hudTextGroup.members[2].text = FlxStringUtil.formatMoney(playstate.songStats.score, false);
 
@@ -205,13 +208,13 @@ class SaraHUD extends Script {
     override public function noteMiss() {
         switch(scoreType) {
         case "Left":
-            hudText.text = playstate.songStats.missCount + "\n\n " + FlxStringUtil.formatMoney(playstate.songStats.score, false) + "\n\n  " + truncateFloat(playstate.songStats.accuracy, 2) + "%";
+            hudText.text = (Config.showMisses == 0 || Config.showMisses == 1 ? playstate.songStats.missCount : playstate.songStats.comboBreakCount) + "\n\n " + FlxStringUtil.formatMoney(playstate.songStats.score, false) + "\n\n  " + truncateFloat(playstate.songStats.accuracy, 2) + "%";
         
         case "Right":
-            hudText.text = playstate.songStats.missCount + "\n\n" + FlxStringUtil.formatMoney(playstate.songStats.score, false) + " \n\n" + truncateFloat(playstate.songStats.accuracy, 2) + "%  ";
+            hudText.text = (Config.showMisses == 0 || Config.showMisses == 1 ? playstate.songStats.missCount : playstate.songStats.comboBreakCount) + "\n\n" + FlxStringUtil.formatMoney(playstate.songStats.score, false) + " \n\n" + truncateFloat(playstate.songStats.accuracy, 2) + "%  ";
 
         case "Center":
-            hudTextGroup.members[0].text = playstate.songStats.missCount;
+            hudTextGroup.members[0].text = (Config.showMisses == 0 || Config.showMisses == 1 ? playstate.songStats.missCount : playstate.songStats.comboBreakCount);
             hudTextGroup.members[1].text = truncateFloat(playstate.songStats.accuracy, 2) + "%";
             hudTextGroup.members[2].text = FlxStringUtil.formatMoney(playstate.songStats.score, false);
 

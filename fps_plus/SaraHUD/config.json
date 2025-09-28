@@ -16,6 +16,15 @@
 				"defaultIndex": 0
 			}
 		},
+				{
+			"name": "Score Background",
+			"type": "float",
+			"properties": {
+				"defaultValue": 0.3,
+				"range": [0, 1],
+				"increment": 0.1
+			}
+		},
 		{
 			"name": "Strumline Background",
 			"type": "float",

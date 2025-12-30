@@ -19,6 +19,14 @@
 
         "options": ["Disabled", "Right", "Left"]
 	},
+	{
+        "save": "stickyIcons",
+        "translation_key": "stickyIcons",
+        "name": "Sticky Icons",
+        "type": "bool",
+        "description": "freak. anyway, If checked, forces player and opponent icons to stay on the sides of Health Bar.",
+        "value": false
+    },
     {
 		"save": "scoreBG",
 		"translation_key": "scoreBG",

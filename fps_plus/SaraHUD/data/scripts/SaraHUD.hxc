@@ -9,10 +9,11 @@ import flixel.group.FlxTypedSpriteGroup;
 import config.Config;
 
 class SaraHUD extends Script {
-    var scoreType = ModConfig.get("sarahud", "Score Type");
-    var extraScore = ModConfig.get("sarahud", "Detailed Score");
-    var strumBG = ModConfig.get("sarahud", "Strumline Background");
-    var scoreBG = ModConfig.get("sarahud", "Score Background");
+    var scoreType = ModConfig.get("mod.novikond.sarahud", "Score Type");
+    var extraScore = ModConfig.get("mod.novikond.sarahud", "Detailed Score");
+    var stickyIcons = ModConfig.get("mod.novikond.sarahud", "Sticky Icons");
+    var strumBG = ModConfig.get("mod.novikond.sarahud", "Strumline Background");
+    var scoreBG = ModConfig.get("mod.novikond.sarahud", "Score Background");
 
     //yo pls allow for FlxColor :pray:
     var clrWHITE = 0xFFFFFFFF;
@@ -32,15 +33,17 @@ class SaraHUD extends Script {
             for (i in 0 ... 4) {
                 playerStrumBG = new FlxSprite(0, -100).makeGraphic(112, FlxG.height + 100, clrBLACK);
                 playerStrumBG.alpha = strumBG;
-
-                addToHud(playerStrumBGGroup);
+                
+                //tell me how to change the order of the sprites. didn't want to add it to Overlay but i'm too stupid for layers/orders
+                addToOverlay(playerStrumBGGroup);
                 playerStrumBGGroup.add(playerStrumBG);
+
 
                 if (!Config.centeredNotes) {
                     opponentStrumBG = new FlxSprite(0, -100).makeGraphic(112, FlxG.height + 100, clrBLACK);
                     opponentStrumBG.alpha = strumBG;
 
-                    addToHud(opponentStrumBGGroup);
+                    addToOverlay(opponentStrumBGGroup);
                     opponentStrumBGGroup.add(opponentStrumBG);
                 }
             }
@@ -167,17 +170,29 @@ class SaraHUD extends Script {
             addToHud(hudTextExtra);
             hudTextExtra.visible = false;
         }
+
+        if (stickyIcons) {
+            iconP1s = new ui.HealthIcon(boyfriend.iconName, true);
+            iconP1s.y = playstate.healthBar.y - (iconP1s.height / 2) + iconP1s.yOffset;
+            iconP1s.x = (playstate.healthBar.x + playstate.healthBar.width) - (iconP1s.width / 2) + iconP1s.xOffset;
+            addToHud(iconP1s);
+
+            iconP2s = new ui.HealthIcon(dad.iconName, false);
+            iconP2s.y = playstate.healthBar.y - (iconP2s.height / 2) + iconP2s.yOffset;
+            iconP2s.x = playstate.healthBar.x - (iconP2s.width / 2) + iconP2s.xOffset;
+            addToHud(iconP2s);
+        }
     }
 
     override public function update() {
         if (strumBG > 0) {
-        for (i in 0 ... 4) {
-            playerStrumBGGroup.members[i].x = playstate.playerStrums.members[i].x;
+            for (i in 0 ... 4) {
+                playerStrumBGGroup.members[i].x = playstate.playerStrums.members[i].x;
 
-            if (!Config.centeredNotes) {
-                opponentStrumBGGroup.members[i].x = playstate.enemyStrums.members[i].x;
+                if (!Config.centeredNotes) {
+                    opponentStrumBGGroup.members[i].x = playstate.enemyStrums.members[i].x;
+                }
             }
-        }
         }
     }
 
@@ -202,6 +217,11 @@ class SaraHUD extends Script {
             if (extraScore != "Disabled") {
                 hudTextExtra.text = playstate.songStats.sickCount + "\n\n" + playstate.songStats.goodCount + "\n\n" + playstate.songStats.badCount + "\n\n" + playstate.songStats.shitCount;
             }
+
+            if (stickyIcons) {
+                iconP1s.animation.curAnim.curFrame = playstate.healthBar.percent < 20 ? 1 : playstate.healthBar.percent > 80 ? 2 : 0;
+                iconP2s.animation.curAnim.curFrame = playstate.healthBar.percent < 20 ? 2 : playstate.healthBar.percent > 80 ? 1 : 0;
+            }
         }
     }
 
@@ -221,6 +241,18 @@ class SaraHUD extends Script {
         case "Vanilla":
             hudText.text = FlxStringUtil.formatMoney(playstate.songStats.score, false);
         }
+
+        if (stickyIcons) {
+            iconP1s.animation.curAnim.curFrame = playstate.healthBar.percent < 20 ? 1 : playstate.healthBar.percent > 80 ? 2 : 0;
+            iconP2s.animation.curAnim.curFrame = playstate.healthBar.percent < 20 ? 2 : playstate.healthBar.percent > 80 ? 1 : 0;
+        }
+    }
+
+    override public function beat(curBeat:Int){
+        if (curBeat % playstate.iconBopFrequency == 0){
+			iconP1s.bop(playstate.defaultIconBopScale, playstate.defaultIconBopTime, playstate.defaultIconBopEase, playstate.tweenManager);
+			iconP2s.bop(playstate.defaultIconBopScale, playstate.defaultIconBopTime, playstate.defaultIconBopEase, playstate.tweenManager);
+		}
     }
 
     override public function countdownBeat(curBeat:Int){
@@ -249,6 +281,12 @@ class SaraHUD extends Script {
 
                 for (i in 0 ... 4) { hudSpriteExtraGroup.members[i].visible = true; }
             }
+
+            if (stickyIcons) {
+                // .destroy on icons crashes the game for some reason
+                playstate.iconP1.visible = false;
+                playstate.iconP2.visible = false;
+            }
         }
     }
 
@@ -275,6 +313,11 @@ class SaraHUD extends Script {
             hudTextExtra.visible = true;
 
             for (i in 0 ... 4) { hudSpriteExtraGroup.members[i].visible = true; }
+        }
+
+        if (stickyIcons) {
+            playstate.iconP1.visible = false;
+            playstate.iconP2.visible = false;
         }
     }
 

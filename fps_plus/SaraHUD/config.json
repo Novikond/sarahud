@@ -16,7 +16,16 @@
 				"defaultIndex": 0
 			}
 		},
-				{
+		{
+			"name": "Sticky Icons",
+			"type": "bool",
+			"properties": {
+				"defaultBool": false,
+				"trueName": "Enabled",
+				"falseName": "Disabled"
+			}
+		},
+		{
 			"name": "Score Background",
 			"type": "float",
 			"properties": {
